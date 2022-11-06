@@ -20,6 +20,9 @@
         android:theme="@style/Theme.310FinalProj"
         tools:targetApi="31">
         <activity
+            android:name=".LoginPage"
+            android:exported="false" />
+        <activity
             android:name=".CreateAccountPage"
             android:exported="false" />
         <activity

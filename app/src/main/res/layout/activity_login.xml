@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginPage">
+
+    <EditText
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:id = "@+id/loginEmail"
+        android:hint = "Email"
+        android:focusable = "true"
+        android:layout_marginTop = "200dp"
+        android:layout_alignParentStart = "true"
+        android:layout_alignParentEnd = "true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/loginPassword"
+        android:layout_below="@+id/loginEmail"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/loginEmail"
+        android:hint="Password" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginLeft="10dp"
+        android:id="@+id/loginError"
+        android:layout_below="@+id/loginPassword"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/loginEmail" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="login"
+        android:id="@+id/loginButton"
+        android:onClick="login"
+        android:layout_below="@+id/loginError" />
+
+</RelativeLayout>

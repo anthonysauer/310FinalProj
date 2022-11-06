@@ -15,6 +15,10 @@ public class User {
     private String password;
     private Bitmap picture;
 
+    public User() {
+
+    }
+
     // UNFINISHED --> profile picture not yet implemented
     public User(String userId, String userEmail, String userName, String userPassword) {
         id = userId;
