@@ -9,14 +9,21 @@ import java.util.Date;
 // class constructors (changes to either must be considered carefully)
 
 public class User {
-    private int id;
+    private String id;
     private String email;
     private String name;
     private String password;
     private Bitmap picture;
 
+    // UNFINISHED --> profile picture not yet implemented
+    public User(String userId, String userEmail, String userName, String userPassword) {
+        id = userId;
+        email = userEmail;
+        name = userName;
+        password = userPassword;
+    }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
