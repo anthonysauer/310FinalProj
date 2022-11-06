@@ -1,6 +1,8 @@
 package com.example.a310finalproj;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Date;
 
@@ -8,7 +10,7 @@ import java.util.Date;
 // createInvitation and createResponse dependent on respective
 // class constructors (changes to either must be considered carefully)
 
-public class User {
+public class User implements Parcelable {
     private String id;
     private String email;
     private String name;
@@ -72,5 +74,38 @@ public class User {
     public Response createResponse(int invitationId, int userId, String message, Date timestamp){
         Response res = new Response(invitationId, userId, message, timestamp);
         return res;
+    }
+
+    // Code to implement Parcelable (allow User to be passed through Intents)
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(email);
+        parcel.writeString(name);
+        parcel.writeString(password);
+        parcel.writeValue(picture);
+    }
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    private User(Parcel in){
+        // the order needs to be the same as in writeToParcel() method
+        this.id = in.readString();
+        this.email = in.readString();
+        this.name = in.readString();
+        this.password = in.readString();
+        this.picture = in.readParcelable(Bitmap.class.getClassLoader());
     }
 }

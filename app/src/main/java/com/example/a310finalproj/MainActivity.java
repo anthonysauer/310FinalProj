@@ -9,20 +9,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String EXTRA_ID = "EXTRA_ID";
-    private final String EXTRA_EMAIL = "EXTRA_EMAIL";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView userId = findViewById(R.id.userId);
-        TextView userEmail = findViewById(R.id.userEmail);
-
         Intent intent = getIntent();
-        userId.setText(intent.getStringExtra(EXTRA_ID));
-        userEmail.setText(intent.getStringExtra(EXTRA_EMAIL));
+        User user = intent.getParcelableExtra(Intent.EXTRA_USER);
+
+        if (user != null) {
+            TextView userIdTextView = findViewById(R.id.userId);
+            TextView userEmailTextView = findViewById(R.id.userEmail);
+
+            userIdTextView.setText(user.getId());
+            userEmailTextView.setText(user.getEmail());
+
+            findViewById(R.id.loginButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.createAccountButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.editProfileButton).setVisibility(View.VISIBLE);
+        }
     }
 
     public void createAccount(View view) {
@@ -33,5 +38,9 @@ public class MainActivity extends AppCompatActivity {
     public void login(View view) {
         Intent intent = new Intent(this, LoginPage.class);
         startActivity(intent);
+    }
+
+    public void editProfile(View view) {
+
     }
 }

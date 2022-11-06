@@ -23,9 +23,6 @@ public class LoginPage extends AppCompatActivity {
 
     FirebaseDatabase root;
 
-    private final String EXTRA_ID = "EXTRA_ID";
-    private final String EXTRA_EMAIL = "EXTRA_EMAIL";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +41,7 @@ public class LoginPage extends AppCompatActivity {
         String email = emailField.getText().toString();
         String password = passwordField.getText().toString();
 
+        // Check if fields are empty
         if (email.isEmpty()) {
             error.setText("Missing required field: email");
             return;
@@ -56,12 +54,12 @@ public class LoginPage extends AppCompatActivity {
         root = FirebaseDatabase.getInstance();
         DatabaseReference userRef = root.getReference("Users");
 
-        // Check if account with email exists
-        // If it does not exist, create the account
+        // Check if account with email and password exists
         userRef.orderByChild("email").equalTo(email)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // Check if email exists
                         if (!snapshot.exists()) {
                             error.setText("Incorrect email or password");
                         }
@@ -75,8 +73,7 @@ public class LoginPage extends AppCompatActivity {
                                 }
                                 else {
                                     Intent intent = new Intent(LoginPage.this, MainActivity.class);
-                                    intent.putExtra(EXTRA_ID, user.getId());
-                                    intent.putExtra(EXTRA_EMAIL, user.getEmail());
+                                    intent.putExtra(Intent.EXTRA_USER, user);
                                     startActivity(intent);
                                 }
                             }
