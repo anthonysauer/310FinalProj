@@ -2,14 +2,19 @@ package com.example.a310finalproj;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class CreateAccountPage extends AppCompatActivity {
     EditText emailField;
@@ -19,7 +24,6 @@ public class CreateAccountPage extends AppCompatActivity {
     TextView error;
 
     FirebaseDatabase root;
-    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,8 @@ public class CreateAccountPage extends AppCompatActivity {
         passwordField = findViewById(R.id.createAccountPassword);
         confirmPasswordField = findViewById(R.id.createAccountConfirmPassword);
         error = findViewById(R.id.createAccountError);
+
+        root = FirebaseDatabase.getInstance();
     }
 
     public void createAccount(View view) {
@@ -59,12 +65,30 @@ public class CreateAccountPage extends AppCompatActivity {
         }
 
         root = FirebaseDatabase.getInstance();
-        reference = root.getReference("Users");
+        DatabaseReference userRef = root.getReference("Users");
 
-        DatabaseReference newUserRef = reference.push();
-        newUserRef.setValue(new User(newUserRef.getKey(), email, name, password));
+        // Check if account with email exists
+        // If it does not exist, create the account
+        userRef.orderByChild("email").equalTo(email)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            error.setText("Account with that email already exists");
+                        }
+                        else {
+                            DatabaseReference newUserRef = userRef.push();
+                            newUserRef.setValue(new User(newUserRef.getKey(), email, name, password));
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+                            Intent intent = new Intent(CreateAccountPage.this, MainActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.w("firebase", "loadPost:onCancelled", error.toException());
+                    }
+                });
     }
 }
