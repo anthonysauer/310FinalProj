@@ -9,13 +9,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-        User user = intent.getParcelableExtra(Intent.EXTRA_USER);
+        user = intent.getParcelableExtra(Intent.EXTRA_USER);
 
         if (user != null) {
             TextView userIdTextView = findViewById(R.id.userId);
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void editProfile(View view) {
-
+        Intent intent = new Intent(this, EditProfilePage.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        startActivity(intent);
     }
 }

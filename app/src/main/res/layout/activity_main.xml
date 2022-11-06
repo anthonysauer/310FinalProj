@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="edit profile"
+        android:text="view/edit profile"
         android:visibility="invisible"
         android:id="@+id/editProfileButton"
         android:onClick="editProfile"
