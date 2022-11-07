@@ -33,6 +33,8 @@ public class Invitation {
         deadline = _deadline;
     }
 
+    public Invitation(){};
+
     // Member functions as per design doc
 
     public String getInvitationId() {
