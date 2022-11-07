@@ -165,6 +165,7 @@ public class CreateInvitationPage extends AppCompatActivity {
                             newInvRef.setValue(
                                     new Invitation(user.getId(), newInvRef.getKey(), addressStr, bio, rent, utilities, bedrooms, beds, bathrooms, hasPets, deadline));
 
+
                             Intent intent = new Intent(CreateInvitationPage.this, MainActivity.class);
                             startActivity(intent);
                         }
