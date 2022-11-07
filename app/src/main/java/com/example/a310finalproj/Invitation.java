@@ -7,8 +7,8 @@ public class Invitation {
 
     // Data members as per design doc
     // private access
-    private int invitationId;
-    private int userId;
+    private String invitationId;
+    private String userId;
     private String biography;
     private String address;
     private double rent;
@@ -19,17 +19,29 @@ public class Invitation {
     private boolean pets;
     private Date deadline;
 
-    public Invitation(){
 
+    public Invitation(String invId, String uId, String addr, String bio, double _rent, double _utilities, int _bedrooms, int _beds, int _bathrooms, boolean _pets, Date _deadline){
+        invitationId = invId;
+        userId = uId;
+        address = addr;
+        rent = _rent;
+        utilities = _utilities;
+        bedrooms = _bedrooms;
+        beds=_beds;
+        bathrooms = _bathrooms;
+        pets = _pets;
+        deadline = _deadline;
     }
+
+    public Invitation(){};
 
     // Member functions as per design doc
 
-    public int getInvitationId() {
+    public String getInvitationId() {
         return invitationId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -105,4 +117,3 @@ public class Invitation {
         this.deadline = deadline;
     }
 }
-

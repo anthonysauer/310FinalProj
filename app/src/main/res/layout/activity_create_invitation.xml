@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateInvitationPage">
+
+    <EditText
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:id = "@+id/createInvAddress"
+        android:hint = "Address"
+        android:focusable = "true"
+        android:layout_marginTop = "50dp"
+        android:layout_alignParentStart = "true"
+        android:layout_alignParentEnd = "true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/createInvBio"
+        android:layout_below="@+id/createInvAddress"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="Biography" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/createInvRent"
+        android:layout_below="@+id/createInvBio"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="Rent" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/createInvUtilities"
+        android:layout_below="@+id/createInvRent"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="Utilities"
+        android:autofillHints="" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/createInvBedrooms"
+        android:layout_below="@+id/createInvUtilities"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="Number of Bedrooms"
+        android:autofillHints="" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/createInvBeds"
+        android:layout_below="@+id/createInvBedrooms"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="Number of Beds"
+        android:autofillHints="" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/createInvBathrooms"
+        android:layout_below="@+id/createInvBeds"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="Number of Bathrooms"
+        android:autofillHints="" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/createInvDeadline"
+        android:layout_below="@+id/createInvBathrooms"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="Deadline (MM/DD/YYYY)"
+        android:autofillHints="" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/createInvPets"
+        android:layout_below="@+id/createInvDeadline"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="Number of pets"
+        android:autofillHints="" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginLeft="10dp"
+        android:id="@+id/createInvError"
+        android:layout_below="@+id/createInvPets"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress" />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Create Invitation"
+        android:id="@+id/createInvButton"
+        android:onClick="createInv"
+        android:layout_below="@+id/createInvError" />
+
+    <!--android:onClick="createInv" FOR BUTTON-->
+
+</RelativeLayout>
