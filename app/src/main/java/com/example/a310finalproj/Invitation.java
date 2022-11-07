@@ -19,6 +19,7 @@ public class Invitation {
     private boolean pets;
     private Date deadline;
 
+    public Invitation(){}
 
     public Invitation(String invId, String uId, String addr, String bio, double _rent, double _utilities, int _bedrooms, int _beds, int _bathrooms, boolean _pets, Date _deadline){
         invitationId = invId;

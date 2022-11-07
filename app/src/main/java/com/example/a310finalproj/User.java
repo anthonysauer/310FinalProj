@@ -66,7 +66,7 @@ public class User implements Parcelable {
     }
 
     //incomplete
-    public Invitation createInvitation(){
+   public Invitation createInvitation(){
         Invitation inv = new Invitation();
         return inv;
     };
