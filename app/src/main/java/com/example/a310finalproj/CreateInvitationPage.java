@@ -47,7 +47,11 @@ public class CreateInvitationPage extends AppCompatActivity {
     int beds;
     int bathrooms;
     int pets;
+    boolean hasPets;
     Date deadline;
+    User user;
+    Intent intent;
+
 
     FirebaseDatabase root;
 
@@ -55,6 +59,9 @@ public class CreateInvitationPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_invitation);
+
+        intent = getIntent();
+        user = intent.getParcelableExtra(Intent.EXTRA_USER);
 
         addressField = findViewById(R.id.createInvAddress);
         bioField = findViewById(R.id.createInvBio);
@@ -68,6 +75,8 @@ public class CreateInvitationPage extends AppCompatActivity {
         error = findViewById(R.id.createInvError);
 
         root = FirebaseDatabase.getInstance();
+
+
     }
 
     //TODO: PARSE/VERIFY ADDRESS
@@ -119,7 +128,7 @@ public class CreateInvitationPage extends AppCompatActivity {
             error.setText("Incorrect numerical field, please try again.");
             return;
         }
-        boolean hasPets = false;
+        hasPets = false;
         if(pets>0){
             hasPets = true;
         }
@@ -153,11 +162,11 @@ public class CreateInvitationPage extends AppCompatActivity {
                         }
                         else {
                             DatabaseReference newInvRef = invRef.push();
-                           /* newInvRef.setValue(
-                                    new Invitation(newInvRef.getKey(), addressStr, bio, rent, utilities, bedrooms, beds, bathrooms, hasPets, deadline));
+                           newInvRef.setValue(
+                                    new Invitation(user.getId(), newInvRef.getKey(), addressStr, bio, rent, utilities, bedrooms, beds, bathrooms, hasPets, deadline));
 
-                            Intent intent = new Intent(CreateAccountPage.this, MainActivity.class);
-                            startActivity(intent);*/
+                            Intent intent = new Intent(CreateInvitationPage.this, MainActivity.class);
+                            startActivity(intent);
                         }
                     }
 
