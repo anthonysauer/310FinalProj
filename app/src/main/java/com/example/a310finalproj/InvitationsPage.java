@@ -1,9 +1,14 @@
 package com.example.a310finalproj;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,16 +22,19 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InvitationsPage extends AppCompatActivity {
     User user;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
         setContentView(R.layout.activity_invitations);
+        context = this;
 
 
 
@@ -106,13 +114,27 @@ public class InvitationsPage extends AppCompatActivity {
                                         break;
                                 }
                             }
-                            //render invitation
+                            //save invitation to list
                             if(!thisUser){
                                 invitations.add(inv);
-
                             }
 
                         }
+                        //render invitations
+                        LinearLayout insertPoint = findViewById(R.id.invList);
+
+
+                        for(Invitation i : invitations){
+                            Button myButton = new Button(context);
+                            myButton.setLayoutParams(new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.MATCH_PARENT));
+                            myButton.setText(i.getAddress());
+                            insertPoint.addView(myButton);
+                        }
+
+
+
                     }
 
                     @Override
