@@ -31,11 +31,18 @@ public class InvitationsPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_invitations);
+        Intent intent = getIntent();
+        user = intent.getParcelableExtra(Intent.EXTRA_USER);
+
+
+
         context = this;
 
+
+        if(user != null) {
+            Log.d("Invs:", "good");
+        }
 
 
         // read non-user invitations from database
@@ -65,12 +72,15 @@ public class InvitationsPage extends AppCompatActivity {
                         // deadline Date
 
                         // ITERATE THROUGH ALL INVITATION ID's
-
+                        Log.d("AA","1");
                         for(DataSnapshot ID : snapshot.getChildren()){
+                            Log.d("AA","2");
                             boolean thisUser = false;
                             // ITERATE THROUGH DATA MEMBERS AND ADD TO NEW INVITATION
                             Invitation inv = new Invitation();
+                            Log.d("AA","3");
                             for(DataSnapshot dataMember : ID.getChildren()){
+                                Log.d("AA","4");
                                 switch(dataMember.getKey()) {
                                     case "userId":
                                         String id = dataMember.getValue().toString();
@@ -114,6 +124,7 @@ public class InvitationsPage extends AppCompatActivity {
                                         break;
                                 }
                             }
+                            Log.d("AA","5");
                             //save invitation to list
                             if(!thisUser){
                                 invitations.add(inv);
@@ -125,12 +136,19 @@ public class InvitationsPage extends AppCompatActivity {
 
 
                         for(Invitation i : invitations){
-                            Button myButton = new Button(context);
-                            myButton.setLayoutParams(new LinearLayout.LayoutParams(
+                            Button entry = new Button(context);
+                            entry.setLayoutParams(new LinearLayout.LayoutParams(
                                     LinearLayout.LayoutParams.MATCH_PARENT,
                                     LinearLayout.LayoutParams.MATCH_PARENT));
-                            myButton.setText(i.getAddress());
-                            insertPoint.addView(myButton);
+                            entry.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    viewInvitation(entry);
+                                }
+                            });
+
+                            entry.setText("View invitation at: " + i.getAddress());
+                            insertPoint.addView(entry);
                         }
 
 
@@ -145,6 +163,12 @@ public class InvitationsPage extends AppCompatActivity {
     }
 
     public void viewInvitation(View view){
+        
+    }
 
+    public void returnFromInvs(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        startActivity(intent);
     }
 }
