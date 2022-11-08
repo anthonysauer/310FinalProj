@@ -93,7 +93,8 @@ public class CreateAccountPage extends AppCompatActivity {
                         }
                         else {
                             DatabaseReference newUserRef = userRef.push();
-                            newUserRef.setValue(new User(newUserRef.getKey(), email, name, password));
+                            User user = new User(newUserRef.getKey(), email, name, password);
+                            newUserRef.setValue(user);
 
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
                             picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -109,6 +110,8 @@ public class CreateAccountPage extends AppCompatActivity {
                             storageRef.child("images/users/" + newUserRef.getKey()).putBytes(data)
                                     .addOnSuccessListener(taskSnapshot -> {
                                         Intent intent = new Intent(CreateAccountPage.this, MainActivity.class);
+                                        intent.putExtra(Intent.EXTRA_USER, user);
+                                        intent.putExtra("PICTURE", data);
                                         startActivity(intent);
                                     })
                                     .addOnFailureListener(e -> {
