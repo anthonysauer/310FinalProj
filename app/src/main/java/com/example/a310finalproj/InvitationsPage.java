@@ -25,17 +25,9 @@ public class InvitationsPage extends AppCompatActivity {
 
         // TODO - assign activity xml page
         // setContentView(R.layout.<XML FILE>);
+        setContentView(R.layout.activity_invitations);
 
 
-        //DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        //Map<String,Object> ex = new HashMap<>();
-
-        //ex.put("/Invitation/test/id","none");
-        //ex.put("/Invitation/test7/test","test");
-
-
-
-        //db.updateChildren(ex);
 
         // read non-user invitations from database
         // add code when session implemented to filter out user-created invitations
@@ -64,8 +56,9 @@ public class InvitationsPage extends AppCompatActivity {
                         // deadline Date
 
                         // ITERATE THROUGH ALL INVITATION ID's
-                        for(DataSnapshot ID : snapshot.getChildren()){
 
+                        for(DataSnapshot ID : snapshot.getChildren()){
+                            boolean thisUser = false;
                             // ITERATE THROUGH DATA MEMBERS AND ADD TO NEW INVITATION
                             Invitation inv = new Invitation();
                             for(DataSnapshot dataMember : ID.getChildren()){
