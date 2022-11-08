@@ -175,4 +175,15 @@ public class EditProfilePage extends AppCompatActivity {
             }
         }
     }
+
+    public void cancel(View view) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", data);
+        startActivity(intent);
+    }
 }

@@ -90,4 +90,13 @@
         android:onClick="editProfile"
         android:layout_below="@+id/editError" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="cancel"
+        android:id="@+id/editProfileCancel"
+        android:onClick="cancel"
+        android:layout_below="@+id/editProfileButton" />
+
 </RelativeLayout>
