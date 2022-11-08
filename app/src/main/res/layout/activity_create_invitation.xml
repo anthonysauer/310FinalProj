@@ -7,6 +7,18 @@
     tools:context=".CreateInvitationPage">
 
     <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:background="@color/orange"
+        android:focusable="true"
+        android:hint="HomeShare"
+        android:textColorHint="@color/white"
+        android:textSize="40dp" />
+
+    <EditText
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
         android:id = "@+id/createInvAddress"
