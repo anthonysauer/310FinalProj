@@ -117,4 +117,6 @@ public class Invitation {
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
+
+    
 }
