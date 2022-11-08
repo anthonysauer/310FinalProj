@@ -72,21 +72,19 @@ public class InvitationsPage extends AppCompatActivity {
                         // deadline Date
 
                         // ITERATE THROUGH ALL INVITATION ID's
-                        Log.d("AA","1");
                         for(DataSnapshot ID : snapshot.getChildren()){
-                            Log.d("AA","2");
                             boolean thisUser = false;
                             // ITERATE THROUGH DATA MEMBERS AND ADD TO NEW INVITATION
                             Invitation inv = new Invitation();
-                            Log.d("AA","3");
                             for(DataSnapshot dataMember : ID.getChildren()){
-                                Log.d("AA","4");
+
                                 switch(dataMember.getKey()) {
                                     case "userId":
                                         String id = dataMember.getValue().toString();
                                         if(user.getId() == id){
                                             thisUser = true;
                                         }
+                                        break;
                                     case "biography":
                                         inv.setBiography(dataMember.getValue().toString());
                                         break;
@@ -124,7 +122,7 @@ public class InvitationsPage extends AppCompatActivity {
                                         break;
                                 }
                             }
-                            Log.d("AA","5");
+
                             //save invitation to list
                             if(!thisUser){
                                 invitations.add(inv);
@@ -163,7 +161,15 @@ public class InvitationsPage extends AppCompatActivity {
     }
 
     public void viewInvitation(View view){
-        
+        String address = ((Button)view).getText().toString();
+        address = address.substring(20);
+        Intent intent = new Intent(this, InvitationDetails.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("invAddress", address);
+        //pass string to next page
+        startActivity(intent);
+
+
     }
 
     public void returnFromInvs(View view){

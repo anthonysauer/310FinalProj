@@ -1,5 +1,6 @@
 package com.example.a310finalproj;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,8 @@ import java.util.Date;
 
 public class InvitationDetails extends AppCompatActivity {
     User user;
+    String invAdd;
+    Context context;
     Invitation inv;
 
 
@@ -41,13 +44,96 @@ public class InvitationDetails extends AppCompatActivity {
         Intent intent = getIntent();
         user = intent.getParcelableExtra(Intent.EXTRA_USER);
         //inv = intent.getParcelableExtra(Intent.EXTRA_INVITATION);
+        Bundle p = getIntent().getExtras();
+        invAdd =p.getString("invAddress");
+        context = this;
+        inv = new Invitation();
+
+        addr = findViewById(R.id.invDetailsAddress);
+        bio = findViewById(R.id.invDetailsBio);
+        rent = findViewById(R.id.invDetailsRent);
+        utilities = findViewById(R.id.invDetailsUtilities);
+        bedrooms = findViewById(R.id.invDetailsBedrooms);
+        beds = findViewById(R.id.invDetailsBeds);
+        bathrooms = findViewById(R.id.invDetailsBathrooms);
+        pets = findViewById(R.id.invDetailsPets);
+
+        FirebaseDatabase root = FirebaseDatabase.getInstance();
+        DatabaseReference invitationRef = root.getReference("Invitation");
+        invitationRef.orderByChild("address").equalTo(invAdd)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for(DataSnapshot dataMember : snapshot.getChildren()){
+                            switch(dataMember.getKey()) {
+                                case "biography":
+                                    inv.setBiography(dataMember.getValue().toString());
+                                    break;
+                                case "address":
+                                    inv.setAddress(dataMember.getValue().toString());
+                                    break;
+                                case "rent":
+                                    String tempRent = dataMember.getValue().toString();
+                                    Double rent = Double.parseDouble(tempRent);
+                                    inv.setRent(rent);
+                                    break;
+                                case "utilities":
+                                    String tempUtil = dataMember.getValue().toString();
+                                    Double utilities = Double.parseDouble(tempUtil);
+                                    inv.setUtilities(utilities);
+                                    break;
+                                case "bedrooms":
+                                    String tempBeds = dataMember.getValue().toString();
+                                    int beds = Integer.parseInt(tempBeds);
+                                    inv.setBeds(beds);
+                                    break;
+                                case "bathrooms":
+                                    String tempBath = dataMember.getValue().toString();
+                                    int baths = Integer.parseInt(tempBath);
+                                    inv.setBathrooms(baths);
+                                    break;
+                                case "pets":
+                                    String tempPets = dataMember.getValue().toString();
+                                    Boolean pets = Boolean.valueOf(tempPets);
+                                    inv.setPets(pets);
+                                    break;
+                                case "deadline":
+                                    String tempDate = dataMember.getValue().toString();
+
+                                    break;
+                            }
+                        }
+
+
+                        // fill text fields
+                        addr.setText("Address: " + inv.getAddress());
+                        bio.setText("Bio: " + inv.getBiography());
+                        rent.setText("Rent: " + String.valueOf(inv.getRent()));
+                        utilities.setText("Utilities: "+String.valueOf(inv.getUtilities()));
+                        bedrooms.setText("Bedrooms: " + String.valueOf(inv.getBedrooms()));
+                        beds.setText("Beds: " + String.valueOf(inv.getBeds()));
+                        bathrooms.setText("Bathrooms: " + String.valueOf(inv.getBathrooms()));
+                        if(inv.isPets()){
+                            pets.setText("Has pets");
+                        }
+                        else{
+                            pets.setText("No pets");
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
 
 
-        //for testing
-        Date d = new Date();
-        inv = new Invitation("a","a","address","Hello please buy", 1.0, 2.0, 1, 2, 3, true, d);
-        //
+
+
+    /*
         addr = findViewById(R.id.invDetailsAddress);
         bio = findViewById(R.id.invDetailsBio);
         rent = findViewById(R.id.invDetailsRent);
@@ -70,7 +156,7 @@ public class InvitationDetails extends AppCompatActivity {
         }
         else{
             pets.setText("No pets");
-        }
+        }*/
     }
 
     public void acceptInv(View view){
@@ -93,6 +179,7 @@ public class InvitationDetails extends AppCompatActivity {
     public void rejectInv(View view){
         //return to invitations
         Intent intent = new Intent(InvitationDetails.this, InvitationsPage.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
         startActivity(intent);
     }
 }
