@@ -5,6 +5,20 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:background="@color/orange"
+        android:focusable="true"
+        android:hint="HomeShare"
+        android:textColorHint="@color/white"
+        android:textSize="40dp"
+        />
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,14 +38,14 @@
         android:layout_below="@+id/loginButton" />
 
     <Button
+        android:id="@+id/editProfileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/createAccountButton"
         android:layout_centerHorizontal="true"
-        android:text="view/edit profile"
-        android:visibility="invisible"
-        android:id="@+id/editProfileButton"
         android:onClick="editProfile"
-        android:layout_below="@+id/createAccountButton" />
+        android:text="view/edit profile"
+        android:visibility="invisible" />
 
     <Button
         android:layout_width="wrap_content"
@@ -44,14 +58,14 @@
         android:layout_below="@+id/editProfileButton" />
 
     <Button
+        android:id="@+id/manageInvitationsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/createInvitationButton"
         android:layout_centerHorizontal="true"
-        android:text="Manage Invitations"
-        android:visibility="invisible"
-        android:id="@+id/manageInvitationsButton"
         android:onClick="goToManageInvitations"
-        android:layout_below="@+id/createInvitationButton" />
+        android:text="Manage Invitations"
+        android:visibility="invisible" />
 
     <TextView
         android:layout_width="wrap_content"
