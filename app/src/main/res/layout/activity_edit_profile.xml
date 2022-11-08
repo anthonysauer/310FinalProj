@@ -57,13 +57,27 @@
         android:hint="Confirm New Password"
         android:autofillHints="" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="choose profile picture"
+        android:id="@+id/editPicture"
+        android:onClick="uploadPicture"
+        android:layout_below="@+id/editConfirmPassword" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editSelectedPicture"
+        android:layout_below="@+id/editPicture" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:layout_marginLeft="10dp"
         android:id="@+id/editError"
-        android:layout_below="@+id/editConfirmPassword"
+        android:layout_below="@+id/editSelectedPicture"
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/editEmail" />
 

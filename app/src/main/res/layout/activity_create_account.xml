@@ -47,13 +47,22 @@
         android:hint="Confirm Password"
         android:autofillHints="" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="choose profile picture"
+        android:id="@+id/createAccountPicture"
+        android:onClick="uploadPicture"
+        android:layout_below="@+id/createAccountConfirmPassword" />
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:layout_marginLeft="10dp"
         android:id="@+id/createAccountError"
-        android:layout_below="@+id/createAccountConfirmPassword"
+        android:layout_below="@+id/createAccountPicture"
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/createAccountEmail" />
 

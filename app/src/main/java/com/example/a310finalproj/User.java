@@ -18,7 +18,7 @@ public class User implements Parcelable {
     private Bitmap picture;
 
     public User() {
-
+        picture = null;
     }
 
     // UNFINISHED --> profile picture not yet implemented

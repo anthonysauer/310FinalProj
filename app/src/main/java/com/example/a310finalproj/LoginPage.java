@@ -15,6 +15,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class LoginPage extends AppCompatActivity {
     EditText emailField;
@@ -22,6 +24,7 @@ public class LoginPage extends AppCompatActivity {
     TextView error;
 
     FirebaseDatabase root;
+    FirebaseStorage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class LoginPage extends AppCompatActivity {
         error = findViewById(R.id.loginError);
 
         root = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     public void login(View view) {
@@ -72,9 +76,13 @@ public class LoginPage extends AppCompatActivity {
                                     error.setText("Incorrect email or password");
                                 }
                                 else {
-                                    Intent intent = new Intent(LoginPage.this, MainActivity.class);
-                                    intent.putExtra(Intent.EXTRA_USER, user);
-                                    startActivity(intent);
+                                    StorageReference storageRef = storage.getReference("images/users/" + user.getId());
+                                    storageRef.getBytes(1024 * 1024).addOnSuccessListener(bytes -> {
+                                        Intent intent = new Intent(LoginPage.this, MainActivity.class);
+                                        intent.putExtra(Intent.EXTRA_USER, user);
+                                        intent.putExtra("PICTURE",bytes);
+                                        startActivity(intent);
+                                    }).addOnFailureListener(e -> error.setText("Failed to retrieve profile picture"));
                                 }
                             }
                         }

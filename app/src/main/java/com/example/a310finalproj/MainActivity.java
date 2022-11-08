@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public void editProfile(View view) {
         Intent intent = new Intent(this, EditProfilePage.class);
         intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
     }
 

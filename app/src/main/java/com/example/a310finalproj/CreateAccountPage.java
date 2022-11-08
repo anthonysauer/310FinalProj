@@ -1,7 +1,11 @@
 package com.example.a310finalproj;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +19,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class CreateAccountPage extends AppCompatActivity {
     EditText emailField;
@@ -23,7 +32,12 @@ public class CreateAccountPage extends AppCompatActivity {
     EditText confirmPasswordField;
     TextView error;
 
+    Bitmap picture = null;
+
     FirebaseDatabase root;
+    FirebaseStorage storage;
+
+    public static final int GET_FROM_GALLERY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +53,7 @@ public class CreateAccountPage extends AppCompatActivity {
         error = findViewById(R.id.createAccountError);
 
         root = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     public void createAccount(View view) {
@@ -64,8 +79,8 @@ public class CreateAccountPage extends AppCompatActivity {
             return;
         }
 
-        root = FirebaseDatabase.getInstance();
         DatabaseReference userRef = root.getReference("Users");
+        StorageReference storageRef = storage.getReference();
 
         // Check if account with email exists
         // If it does not exist, create the account
@@ -80,8 +95,26 @@ public class CreateAccountPage extends AppCompatActivity {
                             DatabaseReference newUserRef = userRef.push();
                             newUserRef.setValue(new User(newUserRef.getKey(), email, name, password));
 
-                            Intent intent = new Intent(CreateAccountPage.this, MainActivity.class);
-                            startActivity(intent);
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+                            if (picture.getAllocationByteCount() > (1024 * 1024)) {
+                                error.setText("Picture too large: max size is 1 MB");
+                                newUserRef.removeValue();
+                                return;
+                            }
+
+                            byte[] data = baos.toByteArray();
+
+                            storageRef.child("images/users/" + newUserRef.getKey()).putBytes(data)
+                                    .addOnSuccessListener(taskSnapshot -> {
+                                        Intent intent = new Intent(CreateAccountPage.this, MainActivity.class);
+                                        startActivity(intent);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        error.setText("Failed to upload picture");
+                                        newUserRef.removeValue();
+                                    });
                         }
                     }
 
@@ -90,5 +123,29 @@ public class CreateAccountPage extends AppCompatActivity {
                         Log.w("firebase", "loadPost:onCancelled", error.toException());
                     }
                 });
+    }
+
+    public void uploadPicture(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+        // pass the constant to compare it
+        // with the returned requestCode
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GET_FROM_GALLERY);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Detects request codes
+        if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            try {
+                picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
