@@ -23,6 +23,7 @@ public class Invitation {
     public Invitation(String invId, String uId, String addr, String bio, double _rent, double _utilities, int _bedrooms, int _beds, int _bathrooms, boolean _pets, Date _deadline){
         invitationId = invId;
         userId = uId;
+        biography = bio;
         address = addr;
         rent = _rent;
         utilities = _utilities;

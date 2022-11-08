@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InvitationDetails">
+
+    <TextView
+
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id = "@+id/invDetailsAddress"
+        android:focusable = "true"
+        android:layout_marginTop = "50dp"
+        android:layout_alignParentStart = "true"
+        android:layout_alignParentEnd = "true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invDetailsBio"
+        android:layout_below="@+id/invDetailsAddress"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/invDetailsAddress"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invDetailsRent"
+        android:layout_below="@+id/invDetailsBio"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/invDetailsAddress"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invDetailsUtilities"
+        android:layout_below="@+id/invDetailsRent"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/invDetailsAddress"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invDetailsBedrooms"
+        android:layout_below="@+id/invDetailsUtilities"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/invDetailsAddress"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invDetailsBeds"
+        android:layout_below="@+id/invDetailsBedrooms"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/invDetailsAddress"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invDetailsBathrooms"
+        android:layout_below="@+id/invDetailsBeds"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/invDetailsAddress"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invDetailsPets"
+        android:layout_below="@+id/invDetailsBathrooms"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/invDetailsAddress"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invDetailsDeadline"
+        android:layout_below="@+id/invDetailsPets"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/invDetailsAddress"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Reject"
+        android:id="@+id/rejectInvButton"
+        android:onClick="rejectInv"
+        android:layout_below="@+id/invDetailsDeadline"
+        android:layout_alignEnd="@+id/invDetailsAddress"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Accept Invitation"
+        android:id="@+id/acceptInvButton"
+        android:onClick="acceptInv"
+        android:layout_below="@+id/rejectInvButton"
+        android:layout_alignEnd="@+id/invDetailsAddress"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/invAcceptMessage"
+        android:layout_below="@+id/acceptInvButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/invDetailsAddress"
+        android:hint="Send message (optional)" />
+
+
+</RelativeLayout>

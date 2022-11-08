@@ -46,6 +46,14 @@
         <activity
             android:name=".ResponsesPage"
             android:exported="false" />
+        <activity
+            android:name=".InvitationDetails"
+            android:exported="true" />
+        <activity
+            android:name=".ResponseDetails"
+            android:exported="true" />
+
+
     </application>
 
 </manifest>

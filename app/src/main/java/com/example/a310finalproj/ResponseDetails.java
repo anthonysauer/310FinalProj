@@ -1,4 +1,7 @@
 package com.example.a310finalproj;
 
-public class ResponseDetails {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ResponseDetails extends AppCompatActivity {
+
 }
