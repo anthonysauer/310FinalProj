@@ -43,13 +43,23 @@
         android:onClick="goToCreateInvitation"
         android:layout_below="@+id/editProfileButton" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Manage Invitations"
+        android:visibility="invisible"
+        android:id="@+id/manageInvitationsButton"
+        android:onClick="goToManageInvitations"
+        android:layout_below="@+id/createInvitationButton" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text=""
         android:id="@+id/userId"
-        android:layout_below="@+id/createInvitationButton"
+        android:layout_below="@+id/manageInvitationsButton"
         android:layout_alignParentStart="true" />
 
     <TextView

@@ -3,6 +3,7 @@ package com.example.a310finalproj;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,12 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InvitationsPage extends AppCompatActivity {
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO - assign activity xml page
-        // setContentView(R.layout.<XML FILE>);
+
         setContentView(R.layout.activity_invitations);
 
 
@@ -63,6 +64,11 @@ public class InvitationsPage extends AppCompatActivity {
                             Invitation inv = new Invitation();
                             for(DataSnapshot dataMember : ID.getChildren()){
                                 switch(dataMember.getKey()) {
+                                    case "userId":
+                                        String id = dataMember.getValue().toString();
+                                        if(user.getId() == id){
+                                            thisUser = true;
+                                        }
                                     case "biography":
                                         inv.setBiography(dataMember.getValue().toString());
                                         break;
@@ -96,9 +102,14 @@ public class InvitationsPage extends AppCompatActivity {
                                         break;
                                     case "deadline":
                                         String tempDate = dataMember.getValue().toString();
-
+                                        //TODO: ADD DATE FUNCTIONALITY
                                         break;
                                 }
+                            }
+                            //render invitation
+                            if(!thisUser){
+                                invitations.add(inv);
+
                             }
 
                         }
@@ -109,7 +120,9 @@ public class InvitationsPage extends AppCompatActivity {
                         Log.w("firebase", "loadPost:onCancelled", error.toException());
                     }
                 });
+    }
 
+    public void viewInvitation(View view){
 
     }
 }

@@ -52,6 +52,9 @@
         <activity
             android:name=".ResponseDetails"
             android:exported="true" />
+        <activity
+            android:name=".ManageInvitationsPage"
+            android:exported="true" />
 
 
     </application>
