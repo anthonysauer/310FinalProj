@@ -1,6 +1,7 @@
 package com.example.a310finalproj;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,13 +25,15 @@ public class ResponsesPage extends AppCompatActivity {
     Intent intent;
     ArrayList<String> lookupIdList;
     ArrayList<Response> responses;
-    String tempUsrId;
-    String tempInvId;
+
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         intent = getIntent();
         user = intent.getParcelableExtra(Intent.EXTRA_USER);
+        context = this;
 
         // TODO - assign activity xml page
         // setContentView(R.layout.<XML FILE>);
@@ -53,8 +56,7 @@ public class ResponsesPage extends AppCompatActivity {
         // first get ID's of invitations from this user
         // get responses with invitation ID's matching these ID's
         lookupIdList = new ArrayList<>();
-        tempUsrId = "";
-        tempInvId = "";
+
         FirebaseDatabase root = FirebaseDatabase.getInstance();
         DatabaseReference invRef = root.getReference("Invitation");
         invRef.orderByChild("userId").equalTo(user.getId())
@@ -64,7 +66,8 @@ public class ResponsesPage extends AppCompatActivity {
                         //iterate through invitations
                         for(DataSnapshot d : snapshot.getChildren()){
                             //iterate through invitation data members
-
+                            String tempUsrId = "";
+                            String tempInvId = "";
                             for(DataSnapshot dataMem : d.getChildren()){
                                 //look for user ID matching current session user
                                 if(dataMem.getKey().toString() == "userId"){
@@ -80,6 +83,40 @@ public class ResponsesPage extends AppCompatActivity {
                             }
                         }
 
+                        //if no responses for this user, display message
+                        if(lookupIdList.isEmpty()){
+                            //TODO: DISPLAY 'NO INVITATION' MESSAGE
+                        }
+                        Log.d("size", String.valueOf(lookupIdList.size()));
+
+                        for(String resId : lookupIdList) {
+
+                            DatabaseReference resRef = root.getReference("Response");
+                            resRef.orderByChild("responseId").equalTo(resId)
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            //TODO: FORM RESPONSE OBJECT AND RENDER ON PAGE
+                                            for(DataSnapshot res : snapshot.getChildren()){
+                                                for(DataSnapshot dataMem : res.getChildren()){
+                                                    switch(dataMem.getKey().toString()){
+                                                        case "userId":
+
+
+                                                    }
+                                                }
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            Log.w("firebase", "loadPost:onCancelled", error.toException());
+                                        }
+                                    });
+
+                        }
+
                     }
 
                     @Override
@@ -88,38 +125,7 @@ public class ResponsesPage extends AppCompatActivity {
                     }
                 });
 
-        //if no responses for this user, display message
-        if(lookupIdList.isEmpty()){
-            //TODO: DISPLAY 'NO INVITATION' MESSAGE
-        }
 
-        for(String resId : lookupIdList) {
-
-            DatabaseReference resRef = root.getReference("Response");
-            resRef.orderByChild("responseId").equalTo(resId)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            //TODO: FORM RESPONSE OBJECT AND RENDER ON PAGE
-                            for(DataSnapshot res : snapshot.getChildren()){
-                                for(DataSnapshot dataMem : res.getChildren()){
-                                    switch(dataMem.getKey().toString()){
-                                        case "userId":
-
-
-                                    }
-                                }
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Log.w("firebase", "loadPost:onCancelled", error.toException());
-                        }
-                    });
-
-        }
 
 
 
