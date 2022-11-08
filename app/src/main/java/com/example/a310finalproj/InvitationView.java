@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class InvitationView extends View {
-    public InvitationView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+import androidx.appcompat.app.AppCompatActivity;
+
+public class InvitationView extends AppCompatActivity {
+
 }

@@ -13,10 +13,12 @@
             android:orientation="vertical"
             android:layout_height="match_parent"
             android:id="@+id/invList">
-            <TextView
+            <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="test"></TextView>
+                android:text="Return to Home"
+                android:onClick="returnFromInvs"
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
