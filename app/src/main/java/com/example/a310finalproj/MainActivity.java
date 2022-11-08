@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.createAccountButton).setVisibility(View.INVISIBLE);
             findViewById(R.id.editProfileButton).setVisibility(View.VISIBLE);
             findViewById(R.id.createInvitationButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.manageInvitationsButton).setVisibility(View.VISIBLE);
         }
     }
 
@@ -52,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToCreateInvitation(View view){
         Intent intent = new Intent(this, CreateInvitationPage.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        startActivity(intent);
+    }
+
+    public void goToManageInvitations(View view){
+        Intent intent = new Intent(this, ManageInvitationsPage.class);
         intent.putExtra(Intent.EXTRA_USER, user);
         startActivity(intent);
     }

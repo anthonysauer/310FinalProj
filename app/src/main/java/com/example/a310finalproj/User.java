@@ -71,7 +71,7 @@ public class User implements Parcelable {
         return inv;
     };
 
-    public Response createResponse(int invitationId, int userId, String message, Date timestamp){
+    public Response createResponse(String invitationId, String userId, String message, Date timestamp){
         Response res = new Response(invitationId, userId, message, timestamp);
         return res;
     }
