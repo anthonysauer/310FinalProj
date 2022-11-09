@@ -17,6 +17,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.Date;
 
 //TODO: ADD DEADLINE FUNCTIONALITY
@@ -27,7 +29,7 @@ public class InvitationDetails extends AppCompatActivity {
     Context context;
     Invitation inv;
 
-
+    /*
     TextView addr;
     TextView bio;
     TextView rent;
@@ -35,7 +37,7 @@ public class InvitationDetails extends AppCompatActivity {
     TextView bedrooms;
     TextView beds;
     TextView bathrooms;
-    TextView pets;
+    TextView pets;*/
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,14 +51,14 @@ public class InvitationDetails extends AppCompatActivity {
         context = this;
         inv = new Invitation();
 
-        addr = findViewById(R.id.invDetailsAddress);
-        bio = findViewById(R.id.invDetailsBio);
-        rent = findViewById(R.id.invDetailsRent);
-        utilities = findViewById(R.id.invDetailsUtilities);
-        bedrooms = findViewById(R.id.invDetailsBedrooms);
-        beds = findViewById(R.id.invDetailsBeds);
-        bathrooms = findViewById(R.id.invDetailsBathrooms);
-        pets = findViewById(R.id.invDetailsPets);
+        final TextView addr = findViewById(R.id.invDetailsAddress);
+        final TextView bio = findViewById(R.id.invDetailsBio);
+        final TextView rent = findViewById(R.id.invDetailsRent);
+        final TextView utilities = findViewById(R.id.invDetailsUtilities);
+        final TextView bedrooms = findViewById(R.id.invDetailsBedrooms);
+        final TextView beds = findViewById(R.id.invDetailsBeds);
+        final TextView bathrooms = findViewById(R.id.invDetailsBathrooms);
+        final TextView pets = findViewById(R.id.invDetailsPets);
 
         FirebaseDatabase root = FirebaseDatabase.getInstance();
         DatabaseReference invitationRef = root.getReference("Invitation");
@@ -64,8 +66,8 @@ public class InvitationDetails extends AppCompatActivity {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        for(DataSnapshot dataMember : snapshot.getChildren()){
+                        for(DataSnapshot invSnapShot : snapshot.getChildren()){
+                        for(DataSnapshot dataMember : invSnapShot.getChildren()){
                             switch(dataMember.getKey()) {
                                 case "biography":
                                     inv.setBiography(dataMember.getValue().toString());
@@ -103,7 +105,7 @@ public class InvitationDetails extends AppCompatActivity {
 
                                     break;
                             }
-                        }
+                        }}
 
 
                         // fill text fields
@@ -129,50 +131,56 @@ public class InvitationDetails extends AppCompatActivity {
                     }
                 });
 
-
-
-
-
-    /*
-        addr = findViewById(R.id.invDetailsAddress);
-        bio = findViewById(R.id.invDetailsBio);
-        rent = findViewById(R.id.invDetailsRent);
-        utilities = findViewById(R.id.invDetailsUtilities);
-        bedrooms = findViewById(R.id.invDetailsBedrooms);
-        beds = findViewById(R.id.invDetailsBeds);
-        bathrooms = findViewById(R.id.invDetailsBathrooms);
-        pets = findViewById(R.id.invDetailsPets);
-
-        // fill text fields
-        addr.setText("Address: " + inv.getAddress());
-        bio.setText("Bio: " + inv.getBiography());
-        rent.setText("Rent: " + String.valueOf(inv.getRent()));
-        utilities.setText("Utilities: "+String.valueOf(inv.getUtilities()));
-        bedrooms.setText("Bedrooms: " + String.valueOf(inv.getBedrooms()));
-        beds.setText("Beds: " + String.valueOf(inv.getBeds()));
-        bathrooms.setText("Bathrooms: " + String.valueOf(inv.getBathrooms()));
-        if(inv.isPets()){
-            pets.setText("Has pets");
-        }
-        else{
-            pets.setText("No pets");
-        }*/
     }
 
     public void acceptInv(View view){
         EditText msgField = findViewById(R.id.invAcceptMessage);
         String message = msgField.getText().toString();
 
-        //enter new response into DB
+        //get invitation info from page
         FirebaseDatabase root = FirebaseDatabase.getInstance();
-        DatabaseReference resRef = root.getReference("Response");
-        DatabaseReference newResRef = resRef.push();
+        DatabaseReference invitationRef = root.getReference("Invitation");
+        final TextView addr = findViewById(R.id.invDetailsAddress);
+        invitationRef.orderByChild("address").equalTo(invAdd)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String address = addr.getText().toString();
+                        for(DataSnapshot outer : snapshot.getChildren()){
+                            for(DataSnapshot inner: outer.getChildren()){
+                                switch(inner.getKey().toString()){
+                                    case "invitationId":
+                                        String refId = null;
+                                        refId = inner.getValue().toString();
+                                        //enter new response into DB
+                                        FirebaseDatabase root = FirebaseDatabase.getInstance();
+                                        DatabaseReference resRef = root.getReference("Response");
+                                        DatabaseReference newResRef = resRef.push();
 
-        newResRef.setValue(new Response(inv.getInvitationId(), user.getId(), message, null));
+                                        newResRef.setValue(new Response(refId, user.getId(), message, null));
 
-        //return to invitations
-        Intent intent = new Intent(InvitationDetails.this, InvitationsPage.class);
-        startActivity(intent);
+                                        //return to invitations
+                                        Intent intent = new Intent(InvitationDetails.this, ManageInvitationsPage.class);
+                                        intent.putExtra(Intent.EXTRA_USER, user);
+                                        startActivity(intent);
+                                        break;
+                                }
+
+                            }
+                        }
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+
 
     }
 

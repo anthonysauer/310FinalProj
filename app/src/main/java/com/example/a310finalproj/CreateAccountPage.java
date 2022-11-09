@@ -78,6 +78,10 @@ public class CreateAccountPage extends AppCompatActivity {
             error.setText("Your password and confirm password must match");
             return;
         }
+        if (picture == null) {
+            error.setText("Missing required field: picture");
+            return;
+        }
 
         DatabaseReference userRef = root.getReference("Users");
         StorageReference storageRef = storage.getReference();

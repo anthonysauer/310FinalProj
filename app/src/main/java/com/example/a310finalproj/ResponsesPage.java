@@ -1,9 +1,13 @@
 package com.example.a310finalproj;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,16 +28,17 @@ public class ResponsesPage extends AppCompatActivity {
     Intent intent;
     ArrayList<String> lookupIdList;
     ArrayList<Response> responses;
-    String tempUsrId;
-    String tempInvId;
+
+    //Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         intent = getIntent();
         user = intent.getParcelableExtra(Intent.EXTRA_USER);
+        final Context context = this;
 
-        // TODO - assign activity xml page
-        // setContentView(R.layout.<XML FILE>);
+        setContentView(R.layout.activity_respones_page);
 
 
         //DatabaseReference db = FirebaseDatabase.getInstance().getReference();
@@ -52,9 +57,8 @@ public class ResponsesPage extends AppCompatActivity {
 
         // first get ID's of invitations from this user
         // get responses with invitation ID's matching these ID's
-        lookupIdList = new ArrayList<>();
-        tempUsrId = "";
-        tempInvId = "";
+        final LinearLayout insertPoint = findViewById(R.id.resList);
+
         FirebaseDatabase root = FirebaseDatabase.getInstance();
         DatabaseReference invRef = root.getReference("Invitation");
         invRef.orderByChild("userId").equalTo(user.getId())
@@ -62,22 +66,110 @@ public class ResponsesPage extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         //iterate through invitations
+                        lookupIdList = new ArrayList<>();
                         for(DataSnapshot d : snapshot.getChildren()){
-                            //iterate through invitation data members
 
-                            for(DataSnapshot dataMem : d.getChildren()){
-                                //look for user ID matching current session user
-                                if(dataMem.getKey().toString() == "userId"){
-                                    tempUsrId = dataMem.getValue().toString();
-                                }
-                                else if(dataMem.getKey().toString() == "invitationId") {
-                                    tempInvId = dataMem.getValue().toString();
+                                for(DataSnapshot dataMem: d.getChildren()){
+                                    //iterate through invitation data members
+                                    Log.d("test", dataMem.toString());
+
+                                    //look for user ID matching current session user
+                                    switch(dataMem.getKey().toString()){
+                                        case "invitationId":
+                                            final String tempInvId = dataMem.getValue().toString();
+                                            lookupIdList.add(tempInvId);
+                                            DatabaseReference resRef = root.getReference("Response");
+                                            resRef.orderByChild("invitationId").equalTo(tempInvId)
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            //TODO: FORM RESPONSE OBJECT AND RENDER ON PAGE
+                                                            for(DataSnapshot res : snapshot.getChildren()){
+                                                                for(DataSnapshot dataMem : res.getChildren()){
+                                                                    switch(dataMem.getKey().toString()){
+                                                                        case "userId":
+                                                                            //get user, render response
+                                                                            String uid  = dataMem.getValue().toString();
+                                                                            FirebaseDatabase root = FirebaseDatabase.getInstance();
+                                                                            DatabaseReference userRef = root.getReference("Users");
+                                                                            userRef.orderByChild("id").equalTo(uid)
+                                                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                        @Override
+                                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                                            for(DataSnapshot d : snapshot.getChildren()){
+                                                                                                Log.d("testout", d.toString());
+                                                                                                    for(DataSnapshot inner: d.getChildren()){
+                                                                                                        Log.d("testinner", inner.toString());
+                                                                                                        switch(inner.getKey()){
+                                                                                                            case "email":
+                                                                                                                String email = inner.getValue().toString();
+                                                                                                                // display "response from 'user'"
+                                                                                                                // store resId in View
+                                                                                                                Log.d("Test", "rendering");
+                                                                                                                ResponseView entry = new ResponseView(context);
+                                                                                                                entry.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                                                        LinearLayout.LayoutParams.MATCH_PARENT));
+                                                                                                                entry.setResponseId(tempInvId);
+                                                                                                                entry.setOnClickListener(new View.OnClickListener() {
+                                                                                                                    @Override
+                                                                                                                    public void onClick(View view) {
+                                                                                                                        viewResponse(entry);
+                                                                                                                    }
+                                                                                                                });
+                                                                                                                entry.setText("View invitation from: " + email);
+                                                                                                                insertPoint.addView(entry);
+                                                                                                            break;
+                                                                                                        }
+                                                                                                    }
+
+                                                                                            }
+
+
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                                        }
+                                                                                    });
+
+                                                                            break;
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                            Log.w("firebase", "loadPost:onCancelled", error.toException());
+                                                        }
+                                                    });
+                                            break;
+                                    }
+
                                 }
                             }
-                            // if invitation was made by this user, add its id to lookup list
-                            if(tempUsrId == user.getId()){
-                                lookupIdList.add(tempInvId);
-                            }
+
+
+
+
+
+                        //if no responses for this user, display message
+                        if(lookupIdList.isEmpty()){
+                            //TODO: DISPLAY 'NO INVITATION' MESSAGE
+                            Log.d("Test", "empty");
+                        }
+
+
+
+                        for(final String resId : lookupIdList) {
+                            Log.d("Test", "iterating");
+
+
+
+
                         }
 
                     }
@@ -87,42 +179,14 @@ public class ResponsesPage extends AppCompatActivity {
 
                     }
                 });
+    }
 
-        //if no responses for this user, display message
-        if(lookupIdList.isEmpty()){
-            //TODO: DISPLAY 'NO INVITATION' MESSAGE
-        }
-
-        for(String resId : lookupIdList) {
-
-            DatabaseReference resRef = root.getReference("Response");
-            resRef.orderByChild("responseId").equalTo(resId)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            //TODO: FORM RESPONSE OBJECT AND RENDER ON PAGE
-                            for(DataSnapshot res : snapshot.getChildren()){
-                                for(DataSnapshot dataMem : res.getChildren()){
-                                    switch(dataMem.getKey().toString()){
-                                        case "userId":
-
-
-                                    }
-                                }
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Log.w("firebase", "loadPost:onCancelled", error.toException());
-                        }
-                    });
-
-        }
-
-
-
+    public void returnFromResponses(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        startActivity(intent);
 
     }
+
+    public void viewResponse(View view){}
 }

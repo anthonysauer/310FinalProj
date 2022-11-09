@@ -167,6 +167,7 @@ public class CreateInvitationPage extends AppCompatActivity {
 
 
                             Intent intent = new Intent(CreateInvitationPage.this, MainActivity.class);
+                            intent.putExtra(Intent.EXTRA_USER, user);
                             startActivity(intent);
                         }
                     }
