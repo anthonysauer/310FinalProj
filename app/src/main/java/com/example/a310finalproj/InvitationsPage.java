@@ -211,6 +211,7 @@ public class InvitationsPage extends AppCompatActivity implements AdapterView.On
         address = address.substring(20);
         Intent intent = new Intent(this, InvitationDetails.class);
         intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         intent.putExtra("invAddress", address);
         //pass string to next page
         startActivity(intent);
