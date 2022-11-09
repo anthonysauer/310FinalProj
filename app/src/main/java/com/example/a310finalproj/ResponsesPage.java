@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,17 +29,16 @@ public class ResponsesPage extends AppCompatActivity {
     ArrayList<String> lookupIdList;
     ArrayList<Response> responses;
 
-    Context context;
+    //Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         intent = getIntent();
         user = intent.getParcelableExtra(Intent.EXTRA_USER);
-        context = this;
+        final Context context = this;
 
-        // TODO - assign activity xml page
-        // setContentView(R.layout.<XML FILE>);
+        setContentView(R.layout.activity_respones_page);
 
 
         //DatabaseReference db = FirebaseDatabase.getInstance().getReference();
@@ -88,10 +90,14 @@ public class ResponsesPage extends AppCompatActivity {
                         //if no responses for this user, display message
                         if(lookupIdList.isEmpty()){
                             //TODO: DISPLAY 'NO INVITATION' MESSAGE
+                            Log.d("Test", "empty");
                         }
-                        Log.d("size", String.valueOf(lookupIdList.size()));
+                        final LinearLayout insertPoint = findViewById(R.id.resList);
 
-                        for(String resId : lookupIdList) {
+
+                        for(final String resId : lookupIdList) {
+                            Log.d("Test", "iterating");
+
 
                             DatabaseReference resRef = root.getReference("Response");
                             resRef.orderByChild("responseId").equalTo(resId)
@@ -103,6 +109,49 @@ public class ResponsesPage extends AppCompatActivity {
                                                 for(DataSnapshot dataMem : res.getChildren()){
                                                     switch(dataMem.getKey().toString()){
                                                         case "userId":
+                                                            //get user, render response
+                                                            String uid  = dataMem.getValue().toString();
+                                                            FirebaseDatabase root = FirebaseDatabase.getInstance();
+                                                            DatabaseReference userRef = root.getReference("Users");
+                                                            userRef.orderByChild("id").equalTo(uid)
+                                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            for(DataSnapshot d : snapshot.getChildren()){
+                                                                                for(DataSnapshot outer: d.getChildren()){
+                                                                                    for(DataSnapshot inner: outer.getChildren()){
+                                                                                        switch(inner.getKey()){
+                                                                                            case "email":
+                                                                                                String email = inner.getValue().toString();
+                                                                                                // display "response from 'user'"
+                                                                                                // store resId in View
+                                                                                                Log.d("Test", "rendering");
+                                                                                                ResponseView entry = new ResponseView(context);
+                                                                                                entry.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                                        LinearLayout.LayoutParams.MATCH_PARENT));
+                                                                                                entry.setResponseId(resId);
+                                                                                                entry.setOnClickListener(new View.OnClickListener() {
+                                                                                                    @Override
+                                                                                                    public void onClick(View view) {
+                                                                                                        viewResponse(entry);
+                                                                                                    }
+                                                                                                });
+                                                                                                entry.setText("View invitation from: " + email);
+                                                                                                insertPoint.addView(entry);
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+
+
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                        }
+                                                                    });
 
 
                                                     }
@@ -126,11 +175,14 @@ public class ResponsesPage extends AppCompatActivity {
 
                     }
                 });
+    }
 
-
-
-
-
+    public void returnFromResponses(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        startActivity(intent);
 
     }
+
+    public void viewResponse(View view){}
 }
