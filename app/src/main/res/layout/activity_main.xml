@@ -76,7 +76,8 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content"
-        android:id="@+id/resStatusList">
+        android:id="@+id/resStatusList"
+        android:layout_below="@+id/manageInvitationsButton">
 
     </LinearLayout>
 

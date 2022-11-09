@@ -1,11 +1,22 @@
 package com.example.a310finalproj;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final Context context = this;
 
         Intent intent = getIntent();
         user = intent.getParcelableExtra(Intent.EXTRA_USER);
@@ -32,7 +44,115 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.createInvitationButton).setVisibility(View.VISIBLE);
             findViewById(R.id.manageInvitationsButton).setVisibility(View.VISIBLE);
 
-            // find
+            // find any updated response statuses
+            final LinearLayout insertPoint = findViewById(R.id.resStatusList);
+            FirebaseDatabase root = FirebaseDatabase.getInstance();
+            DatabaseReference resRef = root.getReference("Response");
+            resRef.orderByChild("userId").equalTo(user.getId())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot res : snapshot.getChildren()){
+                                String invId = "";
+                                for(DataSnapshot findId : res.getChildren()){
+                                    if(findId.getKey().toString().equals("invitationId")){
+                                        invId = findId.getValue().toString();
+                                    }
+                                }
+                                for(DataSnapshot inner: res.getChildren()){
+                                    if(inner.getKey().toString().equals("status")){
+                                        if(inner.getValue().toString().equals("accepted")){
+                                            //get invitation and format message
+                                            FirebaseDatabase root = FirebaseDatabase.getInstance();
+                                            DatabaseReference invRef = root.getReference("Invitation");
+                                            invRef.orderByChild("invitationId").equalTo(invId)
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            //find address and display message
+                                                            //find address and display message
+                                                            String address = "";
+                                                            for(DataSnapshot inv : snapshot.getChildren()){
+                                                                for(DataSnapshot mem : inv.getChildren()){
+                                                                    if(mem.getKey().toString().equals("address")){
+
+                                                                        address = mem.getValue().toString();
+                                                                        Button entry = new Button(context);
+                                                                        entry.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT));
+                                                                        entry.setOnClickListener(new View.OnClickListener() {
+                                                                            @Override
+                                                                            public void onClick(View view) {
+                                                                                view.setVisibility(View.INVISIBLE);
+                                                                            }
+                                                                        });
+                                                                        entry.setText("Your response to the invitation at " + address + " has been accepted (click to dismiss)");
+                                                                        insertPoint.addView(entry);
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+                                        }
+                                        else if(inner.getValue().toString().equals("rejected")){
+                                            //get invitation and format message
+                                            FirebaseDatabase root = FirebaseDatabase.getInstance();
+                                            DatabaseReference invRef = root.getReference("Invitation");
+                                            invRef.orderByChild("invitationId").equalTo(invId)
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            //find address and display message
+                                                            String address = "";
+                                                            for(DataSnapshot inv : snapshot.getChildren()){
+                                                                for(DataSnapshot mem : inv.getChildren()){
+                                                                    if(mem.getKey().toString().equals("address")){
+
+                                                                        address = mem.getValue().toString();
+                                                                        Button entry = new Button(context);
+                                                                        entry.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                LinearLayout.LayoutParams.MATCH_PARENT));
+                                                                        entry.setOnClickListener(new View.OnClickListener() {
+                                                                            @Override
+                                                                            public void onClick(View view) {
+                                                                                view.setVisibility(View.INVISIBLE);
+                                                                            }
+                                                                        });
+                                                                        entry.setText("Your response to the invitation at " + address + " has been rejected (click to dismiss)");
+                                                                        insertPoint.addView(entry);
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
         }
     }
 
