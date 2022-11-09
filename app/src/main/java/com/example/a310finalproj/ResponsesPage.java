@@ -85,6 +85,7 @@ public class ResponsesPage extends AppCompatActivity {
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                             //TODO: FORM RESPONSE OBJECT AND RENDER ON PAGE
                                                             for(DataSnapshot res : snapshot.getChildren()){
+                                                                final String resId = res.getKey().toString();
                                                                 for(DataSnapshot dataMem : res.getChildren()){
                                                                     switch(dataMem.getKey().toString()){
                                                                         case "userId":
@@ -97,29 +98,28 @@ public class ResponsesPage extends AppCompatActivity {
                                                                                         @Override
                                                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                                             for(DataSnapshot d : snapshot.getChildren()){
-                                                                                                Log.d("testout", d.toString());
                                                                                                     for(DataSnapshot inner: d.getChildren()){
-                                                                                                        Log.d("testinner", inner.toString());
                                                                                                         switch(inner.getKey()){
                                                                                                             case "email":
                                                                                                                 String email = inner.getValue().toString();
                                                                                                                 // display "response from 'user'"
                                                                                                                 // store resId in View
-                                                                                                                Log.d("Test", "rendering");
                                                                                                                 ResponseView entry = new ResponseView(context);
                                                                                                                 entry.setLayoutParams(new LinearLayout.LayoutParams(
                                                                                                                         LinearLayout.LayoutParams.MATCH_PARENT,
                                                                                                                         LinearLayout.LayoutParams.MATCH_PARENT));
-                                                                                                                entry.setResponseId(tempInvId);
+                                                                                                                entry.setResponseId(resId);
+                                                                                                                entry.setEmail(email);
                                                                                                                 entry.setOnClickListener(new View.OnClickListener() {
                                                                                                                     @Override
                                                                                                                     public void onClick(View view) {
                                                                                                                         viewResponse(entry);
                                                                                                                     }
                                                                                                                 });
-                                                                                                                entry.setText("View invitation from: " + email);
+                                                                                                                entry.setText("View response from: " + email);
                                                                                                                 insertPoint.addView(entry);
                                                                                                             break;
+
                                                                                                         }
                                                                                                     }
 
@@ -188,5 +188,14 @@ public class ResponsesPage extends AppCompatActivity {
 
     }
 
-    public void viewResponse(View view){}
+    public void viewResponse(View view){
+        String resId = ((ResponseView)view).responseId;
+        String email = ((ResponseView)view).email;
+        Intent intent = new Intent(this, ResponseDetails.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("responseId", resId);
+        intent.putExtra("responderEmail", email);
+
+        startActivity(intent);
+    }
 }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ResponseDetails">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,4 +19,56 @@
         android:textSize="40dp"
         />
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="60dp"
+        android:background="@color/white"
+        android:focusable="true"
+        android:text="View Response"
+        android:textColor="@color/white"
+        android:textColorHint="@color/light_orange"
+        android:textSize="35dp" />
+
+    <TextView
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id = "@+id/resUser"
+        android:focusable = "true"
+        android:layout_marginTop = "50dp"
+        android:layout_alignParentStart = "true"
+        android:layout_alignParentEnd = "true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/resMessage"
+        android:layout_below="@+id/resUser"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/resUser"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Reject Response"
+        android:id="@+id/rejectResButton"
+        android:onClick="rejectRes"
+        android:layout_below="@+id/resMessage"
+        android:layout_alignEnd="@+id/resUser"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Accept Response"
+        android:id="@+id/acceptInvButton"
+        android:onClick="acceptRes"
+        android:layout_below="@+id/rejectResButton"
+        android:layout_alignEnd="@+id/resUser"/>
+
+
+</RelativeLayout>

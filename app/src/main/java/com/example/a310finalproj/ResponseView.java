@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 public class ResponseView extends AppCompatButton {
     public String responseId;
+    public String email;
 
     public ResponseView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -21,5 +22,9 @@ public class ResponseView extends AppCompatButton {
 
     public void setResponseId(String id){
         responseId = id;
+    }
+
+    public void setEmail(String in){
+        email = in;
     }
 }
