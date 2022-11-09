@@ -42,6 +42,8 @@ public class Invitation {
         return invitationId;
     }
 
+    public void setInvitationId(String invitationId) { this.invitationId = invitationId; }
+
     public String getUserId() {
         return userId;
     }

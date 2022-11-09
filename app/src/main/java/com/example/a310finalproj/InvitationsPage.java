@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,10 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.Vector;
 
 public class InvitationsPage extends AppCompatActivity {
     User user;
@@ -79,9 +75,12 @@ public class InvitationsPage extends AppCompatActivity {
                             for(DataSnapshot dataMember : ID.getChildren()){
 
                                 switch(dataMember.getKey()) {
+                                    case "invitationId":
+                                        inv.setInvitationId(dataMember.getValue().toString());
+                                        break;
                                     case "userId":
                                         String id = dataMember.getValue().toString();
-                                        if(user.getId() == id){
+                                        if(Objects.equals(user.getId(), id)){
                                             thisUser = true;
                                         }
                                         break;
@@ -132,26 +131,51 @@ public class InvitationsPage extends AppCompatActivity {
                         //render invitations
                         LinearLayout insertPoint = findViewById(R.id.invList);
 
+                        // Only display invitations that have not been accepted by the user
+                        DatabaseReference responseRef = root.getReference("Response");
 
-                        for(Invitation i : invitations){
-                            Button entry = new Button(context);
-                            entry.setLayoutParams(new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.MATCH_PARENT));
-                            entry.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    viewInvitation(entry);
-                                }
-                            });
+                        responseRef.orderByChild("userId").equalTo(user.getId())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            entry.setText("View invitation at: " + i.getAddress());
-                            insertPoint.addView(entry);
+                                        Vector<String> acceptedInvitations = new Vector<>();
+
+                                        if (snapshot.exists()) {
+                                            for (DataSnapshot responseSnapshot : snapshot.getChildren()) {
+                                                Response response = responseSnapshot.getValue(Response.class);
+                                                if (response != null) {
+                                                    acceptedInvitations.add(response.getInvitationId());
+                                                }
+                                            }
+                                        }
+
+                                        for (Invitation i : invitations) {
+                                            // Don't display invitation if user accepted
+                                            if (!acceptedInvitations.contains(i.getInvitationId())) {
+                                                Button entry = new Button(context);
+                                                entry.setLayoutParams(new LinearLayout.LayoutParams(
+                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                        LinearLayout.LayoutParams.MATCH_PARENT));
+                                                entry.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        viewInvitation(entry);
+                                                    }
+                                                });
+                                                entry.setText("View invitation at: " + i.getAddress());
+                                                insertPoint.addView(entry);
+                                            }
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Log.w("firebase", "loadPost:onCancelled", error.toException());
+                                    }
+                                });
                         }
-
-
-
-                    }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
