@@ -20,17 +20,19 @@ public class MainActivity extends AppCompatActivity {
         user = intent.getParcelableExtra(Intent.EXTRA_USER);
 
         if (user != null) {
-            TextView userIdTextView = findViewById(R.id.userId);
+            //TextView userIdTextView = findViewById(R.id.userId);
             TextView userEmailTextView = findViewById(R.id.userEmail);
 
-            userIdTextView.setText(user.getId());
-            userEmailTextView.setText(user.getEmail());
+            //userIdTextView.setText(user.getId());
+            userEmailTextView.setText("Logged in as " + user.getEmail());
 
             findViewById(R.id.loginButton).setVisibility(View.INVISIBLE);
             findViewById(R.id.createAccountButton).setVisibility(View.INVISIBLE);
             findViewById(R.id.editProfileButton).setVisibility(View.VISIBLE);
             findViewById(R.id.createInvitationButton).setVisibility(View.VISIBLE);
             findViewById(R.id.manageInvitationsButton).setVisibility(View.VISIBLE);
+
+            // find
         }
     }
 
