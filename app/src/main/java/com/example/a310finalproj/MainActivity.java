@@ -54,12 +54,14 @@ public class MainActivity extends AppCompatActivity {
     public void goToCreateInvitation(View view){
         Intent intent = new Intent(this, CreateInvitationPage.class);
         intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
     }
 
     public void goToManageInvitations(View view){
         Intent intent = new Intent(this, ManageInvitationsPage.class);
         intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
     }
 }

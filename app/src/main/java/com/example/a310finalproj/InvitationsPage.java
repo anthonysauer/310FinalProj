@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,15 +18,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Vector;
 
-public class InvitationsPage extends AppCompatActivity {
+public class InvitationsPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     User user;
     Context context;
+
+    String[] filters = { "none", "bathrooms", "bedrooms", "beds", "rent", "utilities" };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +38,12 @@ public class InvitationsPage extends AppCompatActivity {
         Intent intent = getIntent();
         user = intent.getParcelableExtra(Intent.EXTRA_USER);
 
+        Spinner spinner = findViewById(R.id.filterSpinner);
+        spinner.setOnItemSelectedListener(this);
 
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, filters);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
         context = this;
 
@@ -39,14 +51,20 @@ public class InvitationsPage extends AppCompatActivity {
         if(user != null) {
             Log.d("Invs:", "good");
         }
+    }
 
-
+    public void retrieveInvitations(String filter) {
         // read non-user invitations from database
         // add code when session implemented to filter out user-created invitations
         FirebaseDatabase root = FirebaseDatabase.getInstance();
         DatabaseReference invitationRef = root.getReference("Invitation");
-        invitationRef
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+        Query query = invitationRef;
+        if (!filter.equals("none")) {
+            query = invitationRef.orderByChild(filter);
+        }
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         //TODO-render Invitations into display
@@ -179,7 +197,7 @@ public class InvitationsPage extends AppCompatActivity {
                                         Log.w("firebase", "loadPost:onCancelled", error.toException());
                                     }
                                 });
-                        }
+                    }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -203,6 +221,22 @@ public class InvitationsPage extends AppCompatActivity {
     public void returnFromInvs(View view){
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+        // Remove invitations from view
+        LinearLayout insertPoint = findViewById(R.id.invList);
+        insertPoint.removeAllViews();
+
+        retrieveInvitations(filters[pos]);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

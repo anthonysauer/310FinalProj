@@ -3,7 +3,6 @@ package com.example.a310finalproj;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -73,6 +72,7 @@ public class ResponseDetails extends AppCompatActivity {
 
         Intent intent = new Intent(this, ManageInvitationsPage.class);
         intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
     }
 
@@ -83,6 +83,7 @@ public class ResponseDetails extends AppCompatActivity {
 
         Intent intent = new Intent(this, ManageInvitationsPage.class);
         intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
     }
 

@@ -3,7 +3,6 @@ package com.example.a310finalproj;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,10 +15,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
-
-import java.util.Date;
 
 //TODO: ADD DEADLINE FUNCTIONALITY
 
@@ -162,6 +157,7 @@ public class InvitationDetails extends AppCompatActivity {
                                         //return to invitations
                                         Intent intent = new Intent(InvitationDetails.this, ManageInvitationsPage.class);
                                         intent.putExtra(Intent.EXTRA_USER, user);
+                                        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
                                         startActivity(intent);
                                         break;
                                 }
@@ -188,6 +184,7 @@ public class InvitationDetails extends AppCompatActivity {
         //return to invitations
         Intent intent = new Intent(InvitationDetails.this, InvitationsPage.class);
         intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
     }
 }

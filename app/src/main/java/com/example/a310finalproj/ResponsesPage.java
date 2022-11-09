@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -19,9 +18,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ResponsesPage extends AppCompatActivity {
     User user;
@@ -191,6 +187,7 @@ public class ResponsesPage extends AppCompatActivity {
     public void returnFromResponses(View view){
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
 
     }
