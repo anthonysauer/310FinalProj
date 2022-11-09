@@ -5,19 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".CreateAccountPage">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/orange"
-        android:focusable="true"
-        android:text="HomeShare"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:textSize="40dp" />
+
     <TextView
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
