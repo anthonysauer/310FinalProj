@@ -11,8 +11,10 @@ public class Invitation {
     private String userId;
     private String biography;
     private String address;
+    private String university;
     private double rent;
     private double utilities;
+    private double distance;
     private int bedrooms;
     private int beds;
     private int bathrooms;
@@ -20,7 +22,7 @@ public class Invitation {
     private Date deadline;
 
 
-    public Invitation(String invId, String uId, String addr, String bio, double _rent, double _utilities, int _bedrooms, int _beds, int _bathrooms, boolean _pets, Date _deadline){
+    public Invitation(String invId, String uId, String addr, String bio, String _university, double _rent, double _utilities, double _distance, int _bedrooms, int _beds, int _bathrooms, boolean _pets, Date _deadline){
         invitationId = invId;
         userId = uId;
         biography = bio;
@@ -32,6 +34,8 @@ public class Invitation {
         bathrooms = _bathrooms;
         pets = _pets;
         deadline = _deadline;
+        university = _university;
+        distance = _distance;
     }
 
     public Invitation(){};
@@ -64,6 +68,14 @@ public class Invitation {
         this.address = address;
     }
 
+    public String getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(String university) {
+        this.university = university;
+    }
+
     public double getRent() {
         return rent;
     }
@@ -78,6 +90,14 @@ public class Invitation {
 
     public void setUtilities(double utilities) {
         this.utilities = utilities;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
     public int getBedrooms() {

@@ -103,13 +103,35 @@
         android:hint="Number of pets"
         android:autofillHints="" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/createInvUniversity"
+        android:layout_below="@+id/createInvPets"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="University"
+        android:autofillHints="" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/createInvDistance"
+        android:layout_below="@+id/createInvUniversity"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/createInvAddress"
+        android:hint="Distance from university (mi)"
+        android:autofillHints="" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:layout_marginLeft="10dp"
         android:id="@+id/createInvError"
-        android:layout_below="@+id/createInvPets"
+        android:layout_below="@+id/createInvDistance"
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/createInvAddress" />
 

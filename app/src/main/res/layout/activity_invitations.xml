@@ -21,6 +21,20 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:id="@+id/filterSpinner" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/filterUniversity"
+        android:hint="Enter university"
+        android:visibility="gone" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="100dp"
+        android:text="filter"
+        android:onClick="filterDistance"
+        android:id="@+id/filterDistanceButton" />
 
     <ScrollView
         android:layout_width = "match_parent"

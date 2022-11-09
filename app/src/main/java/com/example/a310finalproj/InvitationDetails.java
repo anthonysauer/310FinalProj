@@ -54,6 +54,8 @@ public class InvitationDetails extends AppCompatActivity {
         final TextView beds = findViewById(R.id.invDetailsBeds);
         final TextView bathrooms = findViewById(R.id.invDetailsBathrooms);
         final TextView pets = findViewById(R.id.invDetailsPets);
+        final TextView university = findViewById(R.id.invDetailsUniversity);
+        final TextView distance = findViewById(R.id.invDetailsDistance);
 
         FirebaseDatabase root = FirebaseDatabase.getInstance();
         DatabaseReference invitationRef = root.getReference("Invitation");
@@ -99,6 +101,14 @@ public class InvitationDetails extends AppCompatActivity {
                                     String tempDate = dataMember.getValue().toString();
 
                                     break;
+                                case "university":
+                                    inv.setUniversity(dataMember.getValue().toString());
+                                    break;
+                                case "distance":
+                                    String tempDistance = dataMember.getValue().toString();
+                                    Double distance = Double.parseDouble(tempDistance);
+                                    inv.setDistance(distance);
+                                    break;
                             }
                         }}
 
@@ -111,6 +121,8 @@ public class InvitationDetails extends AppCompatActivity {
                         bedrooms.setText("Bedrooms: " + String.valueOf(inv.getBedrooms()));
                         beds.setText("Beds: " + String.valueOf(inv.getBeds()));
                         bathrooms.setText("Bathrooms: " + String.valueOf(inv.getBathrooms()));
+                        university.setText("University: " + inv.getUniversity());
+                        distance.setText("Distance to university: " + String.valueOf(inv.getDistance()));
                         if(inv.isPets()){
                             pets.setText("Has pets");
                         }

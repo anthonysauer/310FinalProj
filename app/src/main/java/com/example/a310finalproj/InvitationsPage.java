@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -29,7 +30,7 @@ public class InvitationsPage extends AppCompatActivity implements AdapterView.On
     User user;
     Context context;
 
-    String[] filters = { "none", "bathrooms", "bedrooms", "beds", "rent", "utilities" };
+    String[] filters = { "none", "bathrooms", "bedrooms", "beds", "rent", "utilities", "distance" };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class InvitationsPage extends AppCompatActivity implements AdapterView.On
         }
     }
 
-    public void retrieveInvitations(String filter) {
+    public void retrieveInvitations(String filter, String university) {
         // read non-user invitations from database
         // add code when session implemented to filter out user-created invitations
         FirebaseDatabase root = FirebaseDatabase.getInstance();
@@ -137,12 +138,22 @@ public class InvitationsPage extends AppCompatActivity implements AdapterView.On
                                         String tempDate = dataMember.getValue().toString();
                                         //TODO: ADD DATE FUNCTIONALITY
                                         break;
+                                    case "university":
+                                        inv.setUniversity(dataMember.getValue().toString());
+                                        break;
+                                    case "distance":
+                                        String tempDistance = dataMember.getValue().toString();
+                                        Double distance = Double.parseDouble(tempDistance);
+                                        inv.setDistance(distance);
+                                        break;
                                 }
                             }
 
                             //save invitation to list
                             if(!thisUser){
-                                invitations.add(inv);
+                                if (!filter.equals("distance") || university.equals(inv.getUniversity())) {
+                                    invitations.add(inv);
+                                }
                             }
 
                         }
@@ -229,15 +240,38 @@ public class InvitationsPage extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
-        // Remove invitations from view
-        LinearLayout insertPoint = findViewById(R.id.invList);
-        insertPoint.removeAllViews();
+        if (!filters[pos].equals("distance")) {
+            // Remove invitations from view
+            LinearLayout insertPoint = findViewById(R.id.invList);
+            insertPoint.removeAllViews();
 
-        retrieveInvitations(filters[pos]);
+            findViewById(R.id.filterUniversity).setVisibility(View.GONE);
+            findViewById(R.id.filterDistanceButton).setVisibility(View.GONE);
+
+            retrieveInvitations(filters[pos], "");
+        }
+        else {
+            findViewById(R.id.filterUniversity).setVisibility(View.VISIBLE);
+            findViewById(R.id.filterDistanceButton).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    public void filterDistance(View view) {
+        EditText universityField = findViewById(R.id.filterUniversity);
+        String university = universityField.getText().toString();
+
+        if (university.isEmpty()) {
+            return;
+        }
+
+        LinearLayout insertPoint = findViewById(R.id.invList);
+        insertPoint.removeAllViews();
+
+        retrieveInvitations("distance", university);
     }
 }

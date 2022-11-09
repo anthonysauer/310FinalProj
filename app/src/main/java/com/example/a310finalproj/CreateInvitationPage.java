@@ -30,6 +30,8 @@ public class CreateInvitationPage extends AppCompatActivity {
     EditText bathroomsField;
     EditText deadlineField;
     EditText petsField;
+    EditText universityField;
+    EditText distanceField;
     TextView error;
 
     String addressStr;
@@ -41,8 +43,11 @@ public class CreateInvitationPage extends AppCompatActivity {
     String bathroomsStr;
     String deadlineStr;
     String petsStr;
+    String universityStr;
+    String distanceStr;
     Double rent;
     Double utilities;
+    Double distance;
     int bedrooms;
     int beds;
     int bathrooms;
@@ -72,6 +77,8 @@ public class CreateInvitationPage extends AppCompatActivity {
         bathroomsField = findViewById(R.id.createInvBathrooms);
         deadlineField = findViewById(R.id.createInvDeadline);
         petsField = findViewById(R.id.createInvPets);
+        universityField = findViewById(R.id.createInvUniversity);
+        distanceField = findViewById(R.id.createInvDistance);
         error = findViewById(R.id.createInvError);
 
         root = FirebaseDatabase.getInstance();
@@ -90,8 +97,11 @@ public class CreateInvitationPage extends AppCompatActivity {
         bathroomsStr = bathroomsField.getText().toString();
         deadlineStr = deadlineField.getText().toString();
         petsStr = petsField.getText().toString();
+        universityStr = universityField.getText().toString();
+        distanceStr = distanceField.getText().toString();
         rent = -1.0;
         utilities = -1.0;
+        distance = -1.0;
         bedrooms = -1;
         beds = -1;
         bathrooms = -1;
@@ -101,7 +111,7 @@ public class CreateInvitationPage extends AppCompatActivity {
 
         // verify full fields
         if(addressStr.isEmpty() || bio.isEmpty() || rentStr.isEmpty() || utilitiesStr.isEmpty()
-                || bedroomsStr.isEmpty() || bedsStr.isEmpty() || bathroomsStr.isEmpty() || deadlineStr.isEmpty() || petsStr.isEmpty()){
+                || bedroomsStr.isEmpty() || bedsStr.isEmpty() || bathroomsStr.isEmpty() || deadlineStr.isEmpty() || petsStr.isEmpty() || universityStr.isEmpty() || distanceStr.isEmpty()){
             error.setText("Missing required field(s) (All fields required)");
             return;
         }
@@ -111,6 +121,7 @@ public class CreateInvitationPage extends AppCompatActivity {
         try{
             rent = Double.parseDouble(rentStr);
             utilities = Double.parseDouble(utilitiesStr);
+            distance = Double.parseDouble(distanceStr);
             bedrooms = Integer.parseInt(bedroomsStr);
             beds = Integer.parseInt(bedsStr);
             bathrooms = Integer.parseInt(bathroomsStr);
@@ -121,7 +132,7 @@ public class CreateInvitationPage extends AppCompatActivity {
             invalid = true;
         }
 
-        if(rent < 0 || utilities < 0 || bedrooms < 0 || beds < 0 || bathrooms < 0 || pets < 0){
+        if(rent < 0 || utilities < 0 || bedrooms < 0 || beds < 0 || bathrooms < 0 || pets < 0 || distance < 0){
             invalid=true;
         }
         if(invalid){
@@ -163,7 +174,7 @@ public class CreateInvitationPage extends AppCompatActivity {
                         else {
                             DatabaseReference newInvRef = invRef.push();
                             newInvRef.setValue(
-                                    new Invitation( newInvRef.getKey(),user.getId(), addressStr, bio, rent, utilities, bedrooms, beds, bathrooms, hasPets, deadline));
+                                    new Invitation(newInvRef.getKey(), user.getId(), addressStr, bio, universityStr, rent, utilities, distance, bedrooms, beds, bathrooms, hasPets, deadline));
 
 
                             Intent intent = new Intent(CreateInvitationPage.this, MainActivity.class);
