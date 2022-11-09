@@ -152,7 +152,11 @@ public class InvitationsPage extends AppCompatActivity {
 
                                         for (Invitation i : invitations) {
                                             // Don't display invitation if user accepted
-                                            if (!acceptedInvitations.contains(i.getInvitationId())) {
+                                            //Log.d("IDuser: ", user.getId());
+                                            //Log.d("IDinv: ", i.getUserId());
+                                            String uid = user.getId();
+                                            String invId = i.getUserId();
+                                            if (!acceptedInvitations.contains(i.getInvitationId()) && (uid != invId)) {
                                                 Button entry = new Button(context);
                                                 entry.setLayoutParams(new LinearLayout.LayoutParams(
                                                         LinearLayout.LayoutParams.MATCH_PARENT,

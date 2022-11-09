@@ -131,34 +131,6 @@ public class InvitationDetails extends AppCompatActivity {
                     }
                 });
 
-
-
-
-
-    /*
-        addr = findViewById(R.id.invDetailsAddress);
-        bio = findViewById(R.id.invDetailsBio);
-        rent = findViewById(R.id.invDetailsRent);
-        utilities = findViewById(R.id.invDetailsUtilities);
-        bedrooms = findViewById(R.id.invDetailsBedrooms);
-        beds = findViewById(R.id.invDetailsBeds);
-        bathrooms = findViewById(R.id.invDetailsBathrooms);
-        pets = findViewById(R.id.invDetailsPets);
-
-        // fill text fields
-        addr.setText("Address: " + inv.getAddress());
-        bio.setText("Bio: " + inv.getBiography());
-        rent.setText("Rent: " + String.valueOf(inv.getRent()));
-        utilities.setText("Utilities: "+String.valueOf(inv.getUtilities()));
-        bedrooms.setText("Bedrooms: " + String.valueOf(inv.getBedrooms()));
-        beds.setText("Beds: " + String.valueOf(inv.getBeds()));
-        bathrooms.setText("Bathrooms: " + String.valueOf(inv.getBathrooms()));
-        if(inv.isPets()){
-            pets.setText("Has pets");
-        }
-        else{
-            pets.setText("No pets");
-        }*/
     }
 
     public void acceptInv(View view){

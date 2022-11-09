@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".EditProfilePage">
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -13,11 +13,12 @@
         android:layout_marginTop="0dp"
         android:background="@color/orange"
         android:focusable="true"
-        android:hint="HomeShare"
+        android:text="HomeShare"
         android:textColorHint="@color/white"
+        android:textColor="@color/white"
         android:textSize="40dp" />
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -25,7 +26,7 @@
         android:layout_marginTop="60dp"
         android:background="@color/white"
         android:focusable="true"
-        android:hint="Edit Profile"
+        android:text="Edit Profile"
         android:textColorHint="@color/light_orange"
         android:textSize="35dp" />
 
