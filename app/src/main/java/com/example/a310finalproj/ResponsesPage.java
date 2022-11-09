@@ -57,7 +57,7 @@ public class ResponsesPage extends AppCompatActivity {
 
         // first get ID's of invitations from this user
         // get responses with invitation ID's matching these ID's
-        lookupIdList = new ArrayList<>();
+        final LinearLayout insertPoint = findViewById(R.id.resList);
 
         FirebaseDatabase root = FirebaseDatabase.getInstance();
         DatabaseReference invRef = root.getReference("Invitation");
@@ -66,105 +66,109 @@ public class ResponsesPage extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         //iterate through invitations
+                        lookupIdList = new ArrayList<>();
                         for(DataSnapshot d : snapshot.getChildren()){
-                            //iterate through invitation data members
-                            String tempUsrId = "";
-                            String tempInvId = "";
-                            for(DataSnapshot dataMem : d.getChildren()){
-                                //look for user ID matching current session user
-                                if(dataMem.getKey().toString() == "userId"){
-                                    tempUsrId = dataMem.getValue().toString();
-                                }
-                                else if(dataMem.getKey().toString() == "invitationId") {
-                                    tempInvId = dataMem.getValue().toString();
+
+                                for(DataSnapshot dataMem: d.getChildren()){
+                                    //iterate through invitation data members
+                                    Log.d("test", dataMem.toString());
+
+                                    //look for user ID matching current session user
+                                    switch(dataMem.getKey().toString()){
+                                        case "invitationId":
+                                            final String tempInvId = dataMem.getValue().toString();
+                                            lookupIdList.add(tempInvId);
+                                            DatabaseReference resRef = root.getReference("Response");
+                                            resRef.orderByChild("invitationId").equalTo(tempInvId)
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            //TODO: FORM RESPONSE OBJECT AND RENDER ON PAGE
+                                                            for(DataSnapshot res : snapshot.getChildren()){
+                                                                for(DataSnapshot dataMem : res.getChildren()){
+                                                                    switch(dataMem.getKey().toString()){
+                                                                        case "userId":
+                                                                            //get user, render response
+                                                                            String uid  = dataMem.getValue().toString();
+                                                                            FirebaseDatabase root = FirebaseDatabase.getInstance();
+                                                                            DatabaseReference userRef = root.getReference("Users");
+                                                                            userRef.orderByChild("id").equalTo(uid)
+                                                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                        @Override
+                                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                                            for(DataSnapshot d : snapshot.getChildren()){
+                                                                                                Log.d("testout", d.toString());
+                                                                                                    for(DataSnapshot inner: d.getChildren()){
+                                                                                                        Log.d("testinner", inner.toString());
+                                                                                                        switch(inner.getKey()){
+                                                                                                            case "email":
+                                                                                                                String email = inner.getValue().toString();
+                                                                                                                // display "response from 'user'"
+                                                                                                                // store resId in View
+                                                                                                                Log.d("Test", "rendering");
+                                                                                                                ResponseView entry = new ResponseView(context);
+                                                                                                                entry.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                                                        LinearLayout.LayoutParams.MATCH_PARENT));
+                                                                                                                entry.setResponseId(tempInvId);
+                                                                                                                entry.setOnClickListener(new View.OnClickListener() {
+                                                                                                                    @Override
+                                                                                                                    public void onClick(View view) {
+                                                                                                                        viewResponse(entry);
+                                                                                                                    }
+                                                                                                                });
+                                                                                                                entry.setText("View invitation from: " + email);
+                                                                                                                insertPoint.addView(entry);
+                                                                                                            break;
+                                                                                                        }
+                                                                                                    }
+
+                                                                                            }
+
+
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                                        }
+                                                                                    });
+
+                                                                            break;
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                            Log.w("firebase", "loadPost:onCancelled", error.toException());
+                                                        }
+                                                    });
+                                            break;
+                                    }
+
                                 }
                             }
-                            // if invitation was made by this user, add its id to lookup list
-                            Log.d("res", tempUsrId);
-                            Log.d("res", tempInvId);
-                            if(tempUsrId == user.getId()){
-                                lookupIdList.add(tempInvId);
-                            }
-                        }
+
+
+
+
 
                         //if no responses for this user, display message
                         if(lookupIdList.isEmpty()){
                             //TODO: DISPLAY 'NO INVITATION' MESSAGE
                             Log.d("Test", "empty");
                         }
-                        final LinearLayout insertPoint = findViewById(R.id.resList);
+
 
 
                         for(final String resId : lookupIdList) {
                             Log.d("Test", "iterating");
 
 
-                            DatabaseReference resRef = root.getReference("Response");
-                            resRef.orderByChild("responseId").equalTo(resId)
-                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            //TODO: FORM RESPONSE OBJECT AND RENDER ON PAGE
-                                            for(DataSnapshot res : snapshot.getChildren()){
-                                                for(DataSnapshot dataMem : res.getChildren()){
-                                                    switch(dataMem.getKey().toString()){
-                                                        case "userId":
-                                                            //get user, render response
-                                                            String uid  = dataMem.getValue().toString();
-                                                            FirebaseDatabase root = FirebaseDatabase.getInstance();
-                                                            DatabaseReference userRef = root.getReference("Users");
-                                                            userRef.orderByChild("id").equalTo(uid)
-                                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                        @Override
-                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                            for(DataSnapshot d : snapshot.getChildren()){
-                                                                                for(DataSnapshot outer: d.getChildren()){
-                                                                                    for(DataSnapshot inner: outer.getChildren()){
-                                                                                        switch(inner.getKey()){
-                                                                                            case "email":
-                                                                                                String email = inner.getValue().toString();
-                                                                                                // display "response from 'user'"
-                                                                                                // store resId in View
-                                                                                                Log.d("Test", "rendering");
-                                                                                                ResponseView entry = new ResponseView(context);
-                                                                                                entry.setLayoutParams(new LinearLayout.LayoutParams(
-                                                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                                                        LinearLayout.LayoutParams.MATCH_PARENT));
-                                                                                                entry.setResponseId(resId);
-                                                                                                entry.setOnClickListener(new View.OnClickListener() {
-                                                                                                    @Override
-                                                                                                    public void onClick(View view) {
-                                                                                                        viewResponse(entry);
-                                                                                                    }
-                                                                                                });
-                                                                                                entry.setText("View invitation from: " + email);
-                                                                                                insertPoint.addView(entry);
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
 
-
-                                                                        }
-
-                                                                        @Override
-                                                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                        }
-                                                                    });
-
-
-                                                    }
-                                                }
-                                            }
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                            Log.w("firebase", "loadPost:onCancelled", error.toException());
-                                        }
-                                    });
 
                         }
 
