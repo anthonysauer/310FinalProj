@@ -78,6 +78,8 @@ public class ResponsesPage extends AppCompatActivity {
                                 }
                             }
                             // if invitation was made by this user, add its id to lookup list
+                            Log.d("res", tempUsrId);
+                            Log.d("res", tempInvId);
                             if(tempUsrId == user.getId()){
                                 lookupIdList.add(tempInvId);
                             }

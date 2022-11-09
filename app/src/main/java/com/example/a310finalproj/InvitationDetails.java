@@ -165,17 +165,50 @@ public class InvitationDetails extends AppCompatActivity {
         EditText msgField = findViewById(R.id.invAcceptMessage);
         String message = msgField.getText().toString();
 
-        //enter new response into DB
+        //get invitation info from page
         FirebaseDatabase root = FirebaseDatabase.getInstance();
-        DatabaseReference resRef = root.getReference("Response");
-        DatabaseReference newResRef = resRef.push();
+        DatabaseReference invitationRef = root.getReference("Invitation");
+        final TextView addr = findViewById(R.id.invDetailsAddress);
+        invitationRef.orderByChild("address").equalTo(invAdd)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String address = addr.getText().toString();
+                        for(DataSnapshot outer : snapshot.getChildren()){
+                            for(DataSnapshot inner: outer.getChildren()){
+                                switch(inner.getKey().toString()){
+                                    case "invitationId":
+                                        String refId = null;
+                                        refId = inner.getValue().toString();
+                                        //enter new response into DB
+                                        FirebaseDatabase root = FirebaseDatabase.getInstance();
+                                        DatabaseReference resRef = root.getReference("Response");
+                                        DatabaseReference newResRef = resRef.push();
 
-        newResRef.setValue(new Response(inv.getInvitationId(), user.getId(), message, null));
+                                        newResRef.setValue(new Response(refId, user.getId(), message, null));
 
-        //return to invitations
-        Intent intent = new Intent(InvitationDetails.this, ManageInvitationsPage.class);
-        intent.putExtra(Intent.EXTRA_USER, user);
-        startActivity(intent);
+                                        //return to invitations
+                                        Intent intent = new Intent(InvitationDetails.this, ManageInvitationsPage.class);
+                                        intent.putExtra(Intent.EXTRA_USER, user);
+                                        startActivity(intent);
+                                        break;
+                                }
+
+                            }
+                        }
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+
 
     }
 
