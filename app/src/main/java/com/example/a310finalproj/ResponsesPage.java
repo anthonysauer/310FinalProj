@@ -86,6 +86,13 @@ public class ResponsesPage extends AppCompatActivity {
                                                             //TODO: FORM RESPONSE OBJECT AND RENDER ON PAGE
                                                             for(DataSnapshot res : snapshot.getChildren()){
                                                                 final String resId = res.getKey().toString();
+                                                                boolean hasStatus = false;
+                                                                for(DataSnapshot dataMem : res.getChildren()){
+                                                                    if(dataMem.getKey().equals("status")){
+                                                                        hasStatus = true;
+                                                                    }
+                                                                }
+                                                                if(!hasStatus){
                                                                 for(DataSnapshot dataMem : res.getChildren()){
                                                                     switch(dataMem.getKey().toString()){
                                                                         case "userId":
@@ -136,7 +143,7 @@ public class ResponsesPage extends AppCompatActivity {
 
                                                                             break;
                                                                     }
-                                                                }
+                                                                }}
                                                             }
 
                                                         }

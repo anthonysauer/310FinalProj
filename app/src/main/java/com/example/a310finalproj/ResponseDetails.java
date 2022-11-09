@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ResponseDetails extends AppCompatActivity {
     User user;
     Intent intent;
+    String globalResId;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,7 @@ public class ResponseDetails extends AppCompatActivity {
 
         Bundle p = getIntent().getExtras();
         final String resId = p.getString("responseId");
+        globalResId = p.getString("responseId");
         final String responderEmail = p.getString("responderEmail");
 
         final TextView userView = findViewById(R.id.resUser);
@@ -37,13 +39,21 @@ public class ResponseDetails extends AppCompatActivity {
         userView.setText("Response from " + responderEmail);
 
         FirebaseDatabase root = FirebaseDatabase.getInstance();
-        DatabaseReference invRef = root.getReference("Response");
-        invRef.
+        DatabaseReference resRef = root.getReference("Response");
+        resRef.
                 addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for(DataSnapshot response : snapshot.getChildren()){
-                            Log.d("resDet", response.getKey().toString());
+                            //if matching response found, get+render message
+
+                            if(response.getKey().toString().equals(resId)){
+                                for(DataSnapshot val : response.getChildren()){
+                                    if(val.getKey().toString().equals("message")){
+                                        messageView.setText("Message: " + val.getValue().toString());
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -57,11 +67,23 @@ public class ResponseDetails extends AppCompatActivity {
     }
 
     public void rejectRes(View view){
+        //update response rejected
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        db.child("Response").child(globalResId).child("status").setValue("rejected");
 
+        Intent intent = new Intent(this, ManageInvitationsPage.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        startActivity(intent);
     }
 
     public void acceptRes(View view){
+        //update response accepted
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        db.child("Response").child(globalResId).child("status").setValue("accepted");
 
+        Intent intent = new Intent(this, ManageInvitationsPage.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        startActivity(intent);
     }
 
 }
