@@ -63,11 +63,15 @@ public class EditProfilePage extends AppCompatActivity {
         Intent intent = getIntent();
         user = intent.getParcelableExtra(Intent.EXTRA_USER);
         byte[] byteArray = intent.getByteArrayExtra("PICTURE");
-        picture = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        if (byteArray != null) {
+            picture = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        }
 
-        emailField.setText(user.getEmail());
-        nameField.setText(user.getName());
-        selectedPicture.setImageBitmap(picture);
+        if (user != null) {
+            emailField.setText(user.getEmail());
+            nameField.setText(user.getName());
+            selectedPicture.setImageBitmap(picture);
+        }
 
         root = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
