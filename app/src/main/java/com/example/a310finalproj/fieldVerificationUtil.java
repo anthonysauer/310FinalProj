@@ -13,7 +13,7 @@ public class fieldVerificationUtil {
     // invalid email format -> false
     // is not university domain ".edu" -> false
     // valid email format with ".edu" -> true
-    public boolean isValidEmail(String entry){
+    public static boolean isValidEmail(String entry){
         if(entry.isEmpty()){
             return false;
         }
@@ -25,7 +25,7 @@ public class fieldVerificationUtil {
     // not number -> false
     // negative -> false
     // positive -> true
-    public boolean isValidIntEntry(String entry){
+    public static boolean isValidIntEntry(String entry){
         int test;
         if(entry.isEmpty()){
             return false;
@@ -47,7 +47,7 @@ public class fieldVerificationUtil {
     // not number -> false
     // negative -> false
     // positive -> true
-    public boolean isValidDoubleEntry(String entry){
+    public static boolean isValidDoubleEntry(String entry){
         double test;
         if(entry.isEmpty()){
             return false;
@@ -69,7 +69,7 @@ public class fieldVerificationUtil {
     // invalid format -> false
     // valid date more than a year in the future -> false
     // valid date in future -> true
-    public boolean isValidDeadline(String entry){
+    public static boolean isValidDeadline(String entry){
         SimpleDateFormat formatter = new SimpleDateFormat("MM/DD/yyyy", Locale.ENGLISH);
         Date deadline;
         try{
@@ -99,7 +99,7 @@ public class fieldVerificationUtil {
     // empty -> false
     // no match to address form -> false
     // matches address form -> true
-    public boolean isValidAddress(String address){
+    public static boolean isValidAddress(String address){
         if(address.isEmpty()){
             return false;
         }
