@@ -109,6 +109,8 @@ public class CreateInvitationPage extends AppCompatActivity {
         deadline = null;
 
 
+
+
         // verify full fields
         if(addressStr.isEmpty() || bio.isEmpty() || rentStr.isEmpty() || utilitiesStr.isEmpty()
                 || bedroomsStr.isEmpty() || bedsStr.isEmpty() || bathroomsStr.isEmpty() || deadlineStr.isEmpty() || petsStr.isEmpty() || universityStr.isEmpty() || distanceStr.isEmpty()){
@@ -116,8 +118,23 @@ public class CreateInvitationPage extends AppCompatActivity {
             return;
         }
 
+        if(!fieldVerificationUtil.isValidAddress(addressStr)){
+            error.setText("Invalid address format");
+            return;
+        }
+
+
         //parse/verify numerical entries
         Boolean invalid = false;
+        if(!fieldVerificationUtil.isValidDoubleEntry(rentStr)){invalid = true;}
+        if(!fieldVerificationUtil.isValidDoubleEntry(utilitiesStr)){invalid = true;}
+        if(!fieldVerificationUtil.isValidDoubleEntry(distanceStr)){invalid = true;}
+        if(!fieldVerificationUtil.isValidIntEntry(bedroomsStr)){invalid=true;}
+        if(!fieldVerificationUtil.isValidIntEntry(bedsStr)){invalid=true;}
+        if(!fieldVerificationUtil.isValidIntEntry(bathroomsStr)){invalid=true;}
+        if(!fieldVerificationUtil.isValidIntEntry(petsStr)){invalid=true;}
+
+
         try{
             rent = Double.parseDouble(rentStr);
             utilities = Double.parseDouble(utilitiesStr);
@@ -132,9 +149,7 @@ public class CreateInvitationPage extends AppCompatActivity {
             invalid = true;
         }
 
-        if(rent < 0 || utilities < 0 || bedrooms < 0 || beds < 0 || bathrooms < 0 || pets < 0 || distance < 0){
-            invalid=true;
-        }
+
         if(invalid){
             error.setText("Incorrect numerical field, please try again.");
             return;
@@ -155,6 +170,10 @@ public class CreateInvitationPage extends AppCompatActivity {
         }
         if(deadline == null){
             error.setText("Invalid date format (MM/DD/YY)");
+            return;
+        }
+        if(!fieldVerificationUtil.isValidDeadline(deadlineStr)){
+            error.setText("Invalid deadline (must be within one year from now)");
             return;
         }
 
