@@ -145,7 +145,7 @@ public class CreateInvitationPage extends AppCompatActivity {
         }
 
         //parse deadline
-        SimpleDateFormat formatter = new SimpleDateFormat("mm/dd/yyyy", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/DD/yyyy", Locale.ENGLISH);
         try{
             deadline = formatter.parse(deadlineStr);
         }
