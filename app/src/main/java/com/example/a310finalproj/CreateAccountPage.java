@@ -68,6 +68,7 @@ public class CreateAccountPage extends AppCompatActivity {
         }
         if(!fieldVerificationUtil.isValidEmail(email)){
             error.setText("Invalid email address (must be \".edu\"");
+            return;
         }
         if (name.isEmpty()) {
             error.setText("Missing required field: name");

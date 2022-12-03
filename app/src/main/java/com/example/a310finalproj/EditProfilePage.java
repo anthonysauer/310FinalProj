@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +46,9 @@ public class EditProfilePage extends AppCompatActivity {
     FirebaseStorage storage;
 
     private static final int GET_FROM_GALLERY = 1;
+
+    @Nullable
+    public CountingIdlingResource idlingResource = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +117,12 @@ public class EditProfilePage extends AppCompatActivity {
         }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
-        if (picture.getAllocationByteCount() > (1024 * 1024)) {
-            error.setText("Picture too large: max size is 1 MB");
-            return;
+        if (picture != null) {
+            picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            if (picture.getAllocationByteCount() > (1024 * 1024)) {
+                error.setText("Picture too large: max size is 1 MB");
+                return;
+            }
         }
 
         byte[] data = baos.toByteArray();
@@ -124,6 +130,10 @@ public class EditProfilePage extends AppCompatActivity {
         root = FirebaseDatabase.getInstance();
         DatabaseReference userRef = root.getReference("Users");
         StorageReference storageRef = storage.getReference();
+
+        if (idlingResource != null) {
+            idlingResource.increment();
+        }
 
         // Check if account with email exists
         // If it does not exist, create the account
@@ -146,11 +156,19 @@ public class EditProfilePage extends AppCompatActivity {
                                         storageRef.child("images/users/" + user.getId()).putBytes(data);
                                     });
                         }
+
+                        if (idlingResource != null && !idlingResource.isIdleNow()) {
+                            idlingResource.decrement();
+                        }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Log.w("firebase", "loadPost:onCancelled", error.toException());
+
+                        if (idlingResource != null && !idlingResource.isIdleNow()) {
+                            idlingResource.decrement();
+                        }
                     }
                 });
     }

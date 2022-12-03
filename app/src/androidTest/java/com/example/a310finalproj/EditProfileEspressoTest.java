@@ -8,10 +8,13 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,6 +23,8 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class EditProfileEspressoTest {
+
+    CountingIdlingResource idlingResource = new CountingIdlingResource("LoginFirebaseCalls");
 
     @Rule
     public ActivityScenarioRule<EditProfilePage> activityRule =
@@ -31,7 +36,16 @@ public class EditProfileEspressoTest {
         testUser.setEmail("testEmail");
         testUser.setName("testName");
         testUser.setPassword("password");
-        activityRule.getScenario().onActivity(activity -> activity.user = testUser);
+        activityRule.getScenario().onActivity(activity -> {
+            activity.user = testUser;
+            activity.idlingResource = idlingResource;
+            IdlingRegistry.getInstance().register(idlingResource);
+        });
+    }
+
+    @After
+    public void unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
@@ -134,5 +148,22 @@ public class EditProfileEspressoTest {
         onView(withId(R.id.editProfileButton)).perform(click());
 
         onView(withId(R.id.editError)).check(matches(withText("Old password is incorrect")));
+    }
+
+    @Test
+    public void editProfileExistingEmailTest() {
+        onView(withId(R.id.editEmail))
+                .perform(typeText("test@test.com"), closeSoftKeyboard());
+        onView(withId(R.id.editName))
+                .perform(typeText("name"), closeSoftKeyboard());
+        onView(withId(R.id.oldPassword))
+                .perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.editPassword))
+                .perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.editConfirmPassword))
+                .perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.editProfileButton)).perform(click());
+
+        onView(withId(R.id.editError)).check(matches(withText("Account with that email already exists")));
     }
 }

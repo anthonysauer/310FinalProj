@@ -8,7 +8,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +27,9 @@ public class LoginPage extends AppCompatActivity {
 
     FirebaseDatabase root;
     FirebaseStorage storage;
+
+    @Nullable
+    public CountingIdlingResource idlingResource = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,10 @@ public class LoginPage extends AppCompatActivity {
         root = FirebaseDatabase.getInstance();
         DatabaseReference userRef = root.getReference("Users");
 
+        if (idlingResource != null) {
+            idlingResource.increment();
+        }
+
         // Check if account with email and password exists
         userRef.orderByChild("email").equalTo(email)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -66,6 +75,9 @@ public class LoginPage extends AppCompatActivity {
                         // Check if email exists
                         if (!snapshot.exists()) {
                             error.setText("Incorrect email or password");
+                            if (idlingResource != null && !idlingResource.isIdleNow()) {
+                                idlingResource.decrement();
+                            }
                         }
                         else {
                             for (DataSnapshot userSnapshot : snapshot.getChildren()) {
@@ -74,8 +86,15 @@ public class LoginPage extends AppCompatActivity {
                                 // If password does not match
                                 if (!user.getPassword().equals(password)) {
                                     error.setText("Incorrect email or password");
+                                    if (idlingResource != null && !idlingResource.isIdleNow()) {
+                                        idlingResource.decrement();
+                                    }
                                 }
                                 else {
+                                    if (idlingResource != null && !idlingResource.isIdleNow()) {
+                                        idlingResource.decrement();
+                                    }
+
                                     StorageReference storageRef = storage.getReference("images/users/" + user.getId());
                                     storageRef.getBytes(1024 * 1024).addOnSuccessListener(bytes -> {
                                         Intent intent = new Intent(LoginPage.this, MainActivity.class);
@@ -91,6 +110,10 @@ public class LoginPage extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Log.w("firebase", "loadPost:onCancelled", error.toException());
+
+                        if (idlingResource != null && !idlingResource.isIdleNow()) {
+                            idlingResource.decrement();
+                        }
                     }
                 });
     }

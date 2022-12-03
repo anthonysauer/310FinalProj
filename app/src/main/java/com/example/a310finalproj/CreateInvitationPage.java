@@ -8,7 +8,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,8 +59,10 @@ public class CreateInvitationPage extends AppCompatActivity {
     User user;
     Intent intent;
 
-
     FirebaseDatabase root;
+
+    @Nullable
+    public CountingIdlingResource idlingResource = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,16 +164,16 @@ public class CreateInvitationPage extends AppCompatActivity {
         }
 
         //parse deadline
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/DD/yyyy", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
         try{
             deadline = formatter.parse(deadlineStr);
         }
         catch(Exception e){
-            error.setText("Invalid date format (MM/DD/YY)");
+            error.setText("Invalid date format (MM/dd/yyyy)");
             return;
         }
         if(deadline == null){
-            error.setText("Invalid date format (MM/DD/YY)");
+            error.setText("Invalid date format (MM/dd/yyyy)");
             return;
         }
         if(!fieldVerificationUtil.isValidDeadline(deadlineStr)){
@@ -181,6 +185,10 @@ public class CreateInvitationPage extends AppCompatActivity {
         root = FirebaseDatabase.getInstance();
         DatabaseReference invRef = root.getReference("Invitation");
 
+        if (idlingResource != null) {
+            idlingResource.increment();
+        }
+
         // Check if invitation with address exists
         // If it does not exist, create invitation
         invRef.orderByChild("address").equalTo(addressStr)
@@ -189,12 +197,19 @@ public class CreateInvitationPage extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             error.setText("Invitation for this address already exists");
+
+                            if (idlingResource != null && !idlingResource.isIdleNow()) {
+                                idlingResource.decrement();
+                            }
                         }
                         else {
                             DatabaseReference newInvRef = invRef.push();
                             newInvRef.setValue(
                                     new Invitation(newInvRef.getKey(), user.getId(), addressStr, bio, universityStr, rent, utilities, distance, bedrooms, beds, bathrooms, hasPets, deadline));
 
+                            if (idlingResource != null && !idlingResource.isIdleNow()) {
+                                idlingResource.decrement();
+                            }
 
                             Intent intent = new Intent(CreateInvitationPage.this, MainActivity.class);
                             intent.putExtra(Intent.EXTRA_USER, user);
@@ -206,6 +221,10 @@ public class CreateInvitationPage extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Log.w("firebase", "loadPost:onCancelled", error.toException());
+
+                        if (idlingResource != null && !idlingResource.isIdleNow()) {
+                            idlingResource.decrement();
+                        }
                     }
                 });
 

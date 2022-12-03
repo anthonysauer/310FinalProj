@@ -42,7 +42,7 @@ public class CreateAccountEspressoTest {
     @Test
     public void createAccountEmptyNameTest() {
         onView(withId(R.id.createAccountEmail))
-                .perform(typeText("email"), closeSoftKeyboard());
+                .perform(typeText("email@usc.edu"), closeSoftKeyboard());
         onView(withId(R.id.createAccountName))
                 .perform(typeText(""), closeSoftKeyboard());
         onView(withId(R.id.createAccountPassword))
@@ -57,7 +57,7 @@ public class CreateAccountEspressoTest {
     @Test
     public void createAccountEmptyPasswordTest() {
         onView(withId(R.id.createAccountEmail))
-                .perform(typeText("email"), closeSoftKeyboard());
+                .perform(typeText("email@usc.edu"), closeSoftKeyboard());
         onView(withId(R.id.createAccountName))
                 .perform(typeText("name"), closeSoftKeyboard());
         onView(withId(R.id.createAccountPassword))
@@ -72,7 +72,7 @@ public class CreateAccountEspressoTest {
     @Test
     public void createAccountPasswordsMatchTest() {
         onView(withId(R.id.createAccountEmail))
-                .perform(typeText("email"), closeSoftKeyboard());
+                .perform(typeText("email@usc.edu"), closeSoftKeyboard());
         onView(withId(R.id.createAccountName))
                 .perform(typeText("name"), closeSoftKeyboard());
         onView(withId(R.id.createAccountPassword))
@@ -87,7 +87,7 @@ public class CreateAccountEspressoTest {
     @Test
     public void createAccountEmptyPictureTest() {
         onView(withId(R.id.createAccountEmail))
-                .perform(typeText("email"), closeSoftKeyboard());
+                .perform(typeText("email@usc.edu"), closeSoftKeyboard());
         onView(withId(R.id.createAccountName))
                 .perform(typeText("name"), closeSoftKeyboard());
         onView(withId(R.id.createAccountPassword))
@@ -97,5 +97,20 @@ public class CreateAccountEspressoTest {
         onView(withId(R.id.createAccountButton)).perform(click());
 
         onView(withId(R.id.createAccountError)).check(matches(withText("Missing required field: picture")));
+    }
+
+    @Test
+    public void createAccountInvalidEmailTest() {
+        onView(withId(R.id.createAccountEmail))
+                .perform(typeText("email"), closeSoftKeyboard());
+        onView(withId(R.id.createAccountName))
+                .perform(typeText("name"), closeSoftKeyboard());
+        onView(withId(R.id.createAccountPassword))
+                .perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.createAccountConfirmPassword))
+                .perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.createAccountButton)).perform(click());
+
+        onView(withId(R.id.createAccountError)).check(matches(withText("Invalid email address (must be \".edu\"")));
     }
 }
