@@ -8,6 +8,7 @@ Since 2.4, the following improvements have been made:
 1. Added more black-box Espresso tests to cover the create account, create invitation, and login features. We used Espresso idling resources to test the features that use Firebase to retrieve information in our database. This allowed us to expand test coverage from 2.4
 2. Added a "RETURN TO HOME" button to the manage invitations page. Previously one was missing and could be confusing for users.
 3. Added a Logout button to the main page. This allows users to logout of their accounts after logging in or creating an account. Then they can sign in to a different account or create another new account.
+4. Improved email validation functionality to ensure users register with a ".edu" email address.
 
 # To run this application:
 1. Open the project in Android Studio: 
