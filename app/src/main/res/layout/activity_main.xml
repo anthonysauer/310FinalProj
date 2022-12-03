@@ -63,13 +63,23 @@
         android:text="Manage Invitations"
         android:visibility="invisible" />
 
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/manageInvitationsButton"
+        android:layout_centerHorizontal="true"
+        android:onClick="logout"
+        android:text="Logout"
+        android:visibility="invisible" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text=""
         android:id="@+id/userId"
-        android:layout_below="@+id/manageInvitationsButton"
+        android:layout_below="@+id/logoutButton"
         android:layout_alignParentStart="true" />
 
     <LinearLayout
@@ -77,7 +87,7 @@
         android:orientation="vertical"
         android:layout_height="wrap_content"
         android:id="@+id/resStatusList"
-        android:layout_below="@+id/manageInvitationsButton">
+        android:layout_below="@+id/logoutButton">
 
     </LinearLayout>
 

@@ -3,7 +3,6 @@ package com.example.a310finalproj;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.editProfileButton).setVisibility(View.VISIBLE);
             findViewById(R.id.createInvitationButton).setVisibility(View.VISIBLE);
             findViewById(R.id.manageInvitationsButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.logoutButton).setVisibility(View.VISIBLE);
 
             // find any updated response statuses
             final LinearLayout insertPoint = findViewById(R.id.resStatusList);
@@ -173,17 +173,35 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToCreateInvitation(View view){
+    public void goToCreateInvitation(View view) {
         Intent intent = new Intent(this, CreateInvitationPage.class);
         intent.putExtra(Intent.EXTRA_USER, user);
         intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
     }
 
-    public void goToManageInvitations(View view){
+    public void goToManageInvitations(View view) {
         Intent intent = new Intent(this, ManageInvitationsPage.class);
         intent.putExtra(Intent.EXTRA_USER, user);
         intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
         startActivity(intent);
+    }
+
+    public void logout(View view) {
+        user = null;
+
+        TextView userEmailTextView = findViewById(R.id.userEmail);
+        userEmailTextView.setText("");
+
+        findViewById(R.id.loginButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.createAccountButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.editProfileButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.createInvitationButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.manageInvitationsButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.logoutButton).setVisibility(View.INVISIBLE);
+
+        // remove any updated response statuses
+        final LinearLayout resStatusList = findViewById(R.id.resStatusList);
+        resStatusList.removeAllViews();
     }
 }

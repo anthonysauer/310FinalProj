@@ -33,4 +33,11 @@ public class ManageInvitationsPage extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void returnFromInvs(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(Intent.EXTRA_USER, user);
+        intent.putExtra("PICTURE", getIntent().getByteArrayExtra("PICTURE"));
+        startActivity(intent);
+    }
+
 }
