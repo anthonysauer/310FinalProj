@@ -9,6 +9,7 @@ Since 2.4, the following improvements have been made:
 2. Added a "RETURN TO HOME" button to the manage invitations page. Previously one was missing and could be confusing for users.
 3. Added a Logout button to the main page. This allows users to logout of their accounts after logging in or creating an account. Then they can sign in to a different account or create another new account.
 4. Improved email validation functionality to ensure users register with a ".edu" email address.
+5. Improvements to UI clarity to help users navigate the app.
 
 # To run this application:
 1. Open the project in Android Studio: 
